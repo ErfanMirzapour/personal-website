@@ -1,0 +1,117 @@
+---
+import { site } from '../data/site';
+import { selectedDesign, type Design } from '../data/designs';
+import '../styles/site.css';
+interface Props {
+  title: string;
+  description?: string;
+  design?: Design;
+  base?: string;
+  preview?: boolean;
+  noIndex?: boolean;
+  article?: boolean;
+  schema?: Record<string, unknown>;
+}
+const {
+  title,
+  description = site.description,
+  design = 'editorial',
+  base = '',
+  preview = false,
+  noIndex = false,
+  article = false,
+  schema,
+} = Astro.props;
+const noindex =
+  noIndex ||
+  preview ||
+  import.meta.env.DEV ||
+  !selectedDesign ||
+  import.meta.env.PUBLIC_SITE_ENV !== 'production';
+const canonical = new URL(Astro.url.pathname, site.url).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta
+      name="robots"
+      content={noindex ? 'noindex, nofollow' : 'index, follow'}
+    />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={site.name} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {schema && (
+      <script
+        is:inline
+        type="application/ld+json"
+        set:html={JSON.stringify(schema).replace(/</g, '\\u003c')}
+      ></script>
+    )}
+  </head>
+  <body class:list={[design, { 'is-preview': preview }]}>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    {preview && (
+      <aside class="preview-bar" aria-label="Design preview">
+        <a href="/designs/">← All five designs</a>
+        <span>
+          {design === 'swiss'
+            ? 'Swiss grid'
+            : design === 'dark'
+              ? 'Quiet dark'
+              : design === 'notebook'
+                ? 'Developer notebook'
+                : design === 'journal'
+                  ? 'Personal journal'
+                  : 'Editorial'}{' '}
+          · Local preview
+        </span>
+        <a href={`${base}/blog/`}>Writing view</a>
+      </aside>
+    )}
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="wordmark" href={`${base}/`} aria-label="Erfan Mirzapour home">
+          erfan<span class="wordmark-full"> mirzapour</span>
+          <span class="brand-dot">.</span>
+        </a>
+        <nav aria-label="Main navigation">
+          <a href={`${base}/#about`}>About</a>
+          <a href={`${base}/#experience`}>Experience</a>
+          <a href={`${base}/blog/`}>Writing</a>
+          <a class="nav-contact" href={`mailto:${site.email}`}>
+            Let’s talk <span aria-hidden="true">↗</span>
+          </a>
+        </nav>
+      </header>
+      <slot />
+      <footer class="site-footer">
+        <div>
+          <a class="footer-name" href={`${base}/`}>
+            {site.name}
+          </a>
+          <p>Frontend engineer. Always learning.</p>
+        </div>
+        <nav aria-label="Social links">
+          <a href={site.linkedin}>LinkedIn ↗</a>
+          <a href={site.github}>GitHub ↗</a>
+          <a href={`mailto:${site.email}`}>Email ↗</a>
+        </nav>
+        <span class="copyright">© {new Date().getFullYear()}</span>
+      </footer>
+    </div>
+  </body>
+</html>

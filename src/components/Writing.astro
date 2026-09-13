@@ -1,0 +1,62 @@
+---
+import { getPublishedPosts, formatDate } from '../lib/posts';
+const { base = '', preview = false } = Astro.props;
+const posts = await getPublishedPosts();
+---
+
+<main id="main" class="writing-page">
+  <header class="page-intro">
+    <span class="eyebrow">The notebook</span>
+    <h1>
+      Writing<span class="accent">.</span>
+    </h1>
+    <p>
+      Thoughts on the web, engineering, and things I’m learning along the way.
+    </p>
+  </header>
+  <section aria-label="Articles">
+    {posts.length ? (
+      <ul class="article-list">
+        {posts.map((post) => (
+          <li>
+            <time datetime={post.data.pubDate.toISOString()}>
+              {formatDate(post.data.pubDate)}
+            </time>
+            <h2>
+              <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+            </h2>
+            <p>{post.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="empty-writing">
+        <span class="eyebrow">A page for what comes next</span>
+        <h2>The first note is still ahead.</h2>
+        <p>
+          No articles published yet. When there’s something ready to share,
+          you’ll find it here.
+        </p>
+        <a class="text-link" href={`${base}/`}>
+          Back to about me ←
+        </a>
+      </div>
+    )}
+    {preview && (
+      <aside class="sample-card">
+        <span class="eyebrow">
+          Development sample · not a published article
+        </span>
+        <h2>
+          <a href={`${base}/blog/reading-sample/`}>
+            A space for longer thoughts
+          </a>
+        </h2>
+        <p>
+          Explore the typography, code blocks, and reading experience of this
+          design.
+        </p>
+      </aside>
+    )}
+  </section>
+</main>

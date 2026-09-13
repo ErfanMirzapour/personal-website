@@ -1,0 +1,62 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getPublishedPosts, formatDate } from '../../lib/posts';
+import { selectedDesign, fallbackDesign } from '../../data/designs';
+import { site } from '../../data/site';
+export async function getStaticPaths() {
+  return (await getPublishedPosts()).map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  ...(post.data.updatedDate && {
+    dateModified: post.data.updatedDate.toISOString(),
+  }),
+  author: { '@type': 'Person', name: site.name, url: site.url },
+  mainEntityOfPage: new URL(`/blog/${post.id}/`, site.url).href,
+};
+---
+
+<Base
+  title={`${post.data.title} — Erfan Mirzapour`}
+  description={post.data.description}
+  design={selectedDesign ?? fallbackDesign}
+  article
+  schema={schema}
+>
+  <main id="main" class="article-page">
+    <a class="back-link" href="/blog/">
+      ← All writing
+    </a>
+    <header class="article-header">
+      <h1>{post.data.title}</h1>
+      <p class="article-deck">{post.data.description}</p>
+      <p class="article-meta">
+        By Erfan Mirzapour ·{' '}
+        <time datetime={post.data.pubDate.toISOString()}>
+          {formatDate(post.data.pubDate)}
+        </time>
+      </p>
+      {post.data.updatedDate && (
+        <p>
+          Updated{' '}
+          <time datetime={post.data.updatedDate.toISOString()}>
+            {formatDate(post.data.updatedDate)}
+          </time>
+        </p>
+      )}
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </main>
+</Base>

@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import Home from '../components/Home.astro';
+import { site } from '../data/site';
+import { selectedDesign, fallbackDesign } from '../data/designs';
+const design = selectedDesign ?? fallbackDesign;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  url: site.url,
+  jobTitle: site.title,
+  sameAs: [site.linkedin, site.github],
+};
+---
+
+<Base
+  title="Erfan Mirzapour — Senior Frontend Engineer"
+  design={design}
+  schema={schema}
+>
+  <Home design={design} />
+</Base>

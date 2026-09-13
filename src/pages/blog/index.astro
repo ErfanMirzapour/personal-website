@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import Writing from '../../components/Writing.astro';
+import { selectedDesign, fallbackDesign } from '../../data/designs';
+---
+
+<Base
+  title="Writing — Erfan Mirzapour"
+  description="Notes and articles by Erfan Mirzapour on frontend engineering, web technology, and learning."
+  design={selectedDesign ?? fallbackDesign}
+>
+  <Writing />
+</Base>
