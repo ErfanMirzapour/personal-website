@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import { selectedDesign, fallbackDesign } from '../data/designs';
+---
+
+<Base
+  title="Page not found — Erfan Mirzapour"
+  description="This page could not be found. Return to Erfan Mirzapour’s homepage."
+  design={selectedDesign ?? fallbackDesign}
+  noIndex
+>
+  <main id="main" class="writing-page">
+    <span class="eyebrow">404</span>
+    <h1>
+      Nothing here,
+      <br />
+      <em>just yet.</em>
+    </h1>
+    <p>
+      This address doesn’t lead to a page. You can return home or explore the
+      writing section.
+    </p>
+    <a class="text-link" href="/">
+      Back to home ←
+    </a>
+  </main>
+</Base>

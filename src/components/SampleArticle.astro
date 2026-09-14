@@ -1,0 +1,67 @@
+---
+const { base = '' } = Astro.props;
+---
+
+<main id="main" class="article-page">
+  <a class="back-link" href={`${base}/blog/`}>
+    ← All writing
+  </a>
+  <header class="article-header">
+    <span class="eyebrow">Typography specimen</span>
+    <h1>
+      A space for
+      <br />
+      <em>longer thoughts.</em>
+    </h1>
+    <p class="article-deck">
+      A reading sample to compare the five designs. This is interface
+      demonstration content, not an article or opinion by Erfan.
+    </p>
+    <p class="article-meta">
+      Design preview <span aria-hidden="true">/</span> September 2026
+    </p>
+  </header>
+  <div class="prose">
+    <p class="sample-notice">
+      <strong>Development sample.</strong> This page is available only in local
+      development and is excluded from production builds.
+    </p>
+    <h2>Room to read</h2>
+    <p>
+      This paragraph demonstrates the width and rhythm of a longer article.
+      Comfortable line lengths, clear headings, and generous spacing give the
+      text room to breathe on both a small screen and a large one.
+    </p>
+    <p>
+      A future article could include a technical explanation, a project
+      retrospective, or a personal observation. Its actual words will come from
+      Erfan’s writing.
+    </p>
+    <blockquote>
+      A short quotation has its own space, without interrupting the flow of the
+      page.
+    </blockquote>
+    <h2>A little code</h2>
+    <p>
+      Technical writing sometimes needs examples. This one shows a small, typed
+      function:
+    </p>
+    <pre><code>type Greeting = &#123; name: string &#125;;
+
+function greet(&#123; name &#125;: Greeting) &#123;
+  return `Hello, $&#123;name&#125;.`;
+&#125;</code></pre>
+    <h2>The details matter</h2>
+    <ul>
+      <li>Headings establish a clear outline.</li>
+      <li>Links remain recognizable and keyboard accessible.</li>
+      <li>Code scrolls within its own container on narrow screens.</li>
+    </ul>
+    <hr />
+    <p>
+      That’s the end of the sample.{' '}
+      <a href={`${base}/blog/`}>Return to writing</a> or{' '}
+      <a href="/designs/">compare another design</a>.
+    </p>
+  </div>
+</main>

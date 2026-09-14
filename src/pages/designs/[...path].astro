@@ -1,0 +1,48 @@
+---
+import Base from '../../layouts/Base.astro';
+import Home from '../../components/Home.astro';
+import Writing from '../../components/Writing.astro';
+import SampleArticle from '../../components/SampleArticle.astro';
+import Gallery from '../../components/Gallery.astro';
+import { designs } from '../../data/designs';
+export function getStaticPaths() {
+  if (!import.meta.env.DEV) return [];
+  return [
+    {
+      params: { path: undefined },
+      props: { design: designs[0], page: 'gallery' },
+    },
+    ...designs.flatMap((design) =>
+      ['home', 'blog', 'article'].map((page) => ({
+        params: {
+          path: `${design.id}${page === 'home' ? '' : page === 'blog' ? '/blog' : '/blog/reading-sample'}`,
+        },
+        props: { design, page },
+      })),
+    ),
+  ];
+}
+const { design, page } = Astro.props;
+const base = `/designs/${design.id}`;
+---
+
+{page === 'gallery' ? (
+  <Gallery />
+) : (
+  <Base
+    title={`${design.name} — ${page === 'home' ? 'Home' : page === 'blog' ? 'Writing' : 'Article sample'} — Design preview`}
+    design={design.id}
+    base={base}
+    preview
+  >
+    <Fragment>
+      {page === 'home' ? (
+        <Home design={design.id} base={base} preview />
+      ) : page === 'blog' ? (
+        <Writing base={base} preview />
+      ) : (
+        <SampleArticle base={base} />
+      )}
+    </Fragment>
+  </Base>
+)}

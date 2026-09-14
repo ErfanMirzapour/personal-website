@@ -1,0 +1,415 @@
+---
+import { designs } from '../data/designs';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Five directions — Erfan Mirzapour</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.svg" />
+  </head>
+  <body class="gallery-body">
+    <header>
+      <a href="/designs/">
+        EM<span> / DESIGN STUDY</span>
+      </a>
+      <span class="local">LOCAL DEVELOPMENT ONLY</span>
+    </header>
+    <main id="main">
+      <div class="intro">
+        <p class="eyebrow">A PERSONAL WEBSITE FOR ERFAN MIRZAPOUR</p>
+        <h1>
+          One story.
+          <br />
+          <span>Five ways to tell it.</span>
+        </h1>
+        <p>
+          Explore a direction, read a little, resize the window.
+          <br />
+          Same content. Five different personalities.
+        </p>
+      </div>
+      <div class="design-grid">
+        {designs.map((d) => (
+          <article>
+            <a
+              href={`/designs/${d.id}/`}
+              class:list={['thumbnail', d.id]}
+              aria-label={`Explore ${d.name}`}
+            >
+              <div class="mini-nav">
+                erfan.<span>ABOUT &nbsp; WORK &nbsp; WRITING</span>
+              </div>
+              <div class="mini-body">
+                {d.id === 'editorial' ? (
+                  <>
+                    <small>SENIOR FRONTEND ENGINEER</small>
+                    <strong>
+                      Thoughtful interfaces.
+                      <br />
+                      <em>Built with care.</em>
+                    </strong>
+                    <p>I’m Erfan Mirzapour. I build for the web.</p>
+                  </>
+                ) : d.id === 'swiss' ? (
+                  <>
+                    <small>FRONTEND ENGINEER — TEHRAN</small>
+                    <strong>
+                      ERFAN
+                      <br />
+                      MIRZAPOUR<span>.</span>
+                    </strong>
+                    <p>Engineering the details.</p>
+                  </>
+                ) : d.id === 'notebook' ? (
+                  <>
+                    <small>~/erfan &nbsp; // about.md</small>
+                    <strong>
+                      Hello, I’m Erfan<span>_</span>
+                      <br />I build for the web.
+                    </strong>
+                    <p>01 / about &nbsp;&nbsp; 02 / toolkit</p>
+                  </>
+                ) : d.id === 'dark' ? (
+                  <>
+                    <small>ENGINEERING WITH INTENTION</small>
+                    <strong>
+                      Good engineering.
+                      <br />
+                      <em>Thoughtful experiences.</em>
+                    </strong>
+                    <p>Open to my next chapter. ↗</p>
+                  </>
+                ) : (
+                  <>
+                    <small>A NOTE FROM ERFAN</small>
+                    <strong>
+                      A little about me,
+                      <br />
+                      <em>and the things I build.</em>
+                    </strong>
+                    <p>Engineer by profession. Curious by nature.</p>
+                  </>
+                )}
+              </div>
+              <div class="mini-bottom">
+                <span>SELECTED EXPERIENCE</span>
+                <span>↗</span>
+              </div>
+            </a>
+            <div class="card-heading">
+              <h2>
+                <span>{d.number}</span>
+                {d.name}
+              </h2>
+              <a href={`/designs/${d.id}/`} aria-label={`Open ${d.name}`}>
+                ↗
+              </a>
+            </div>
+            <p class="description">{d.description}</p>
+            <div class="card-links">
+              <a href={`/designs/${d.id}/`}>Homepage</a>
+              <a href={`/designs/${d.id}/blog/`}>Writing</a>
+              <a href={`/designs/${d.id}/blog/reading-sample/`}>Article</a>
+            </div>
+          </article>
+        ))}
+      </div>
+      <footer>
+        <p>
+          Nothing here is deployed. Your chosen direction becomes the public
+          site.
+        </p>
+        <span>ERFANMIRZAPOUR.IR</span>
+      </footer>
+    </main>
+  </body>
+</html>
+<style>
+  :global(*) {
+    box-sizing: border-box;
+  }
+  :global(.gallery-body) {
+    margin: 0;
+    background: #f6f7f9;
+    color: #19202b;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  :global(.gallery-body a) {
+    color: inherit;
+    text-decoration: none;
+  }
+  :global(.gallery-body a:focus-visible) {
+    outline: 3px solid #244bea;
+    outline-offset: 5px;
+  }
+  header,
+  main {
+    max-width: 1280px;
+    margin: auto;
+    padding: 0 48px;
+  }
+  header {
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #d9dde3;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  header a span {
+    color: #626b77;
+    font-weight: 400;
+  }
+  .local {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: #626b77;
+  }
+  .intro {
+    padding: 80px 0 68px;
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    font-weight: 700;
+    color: #516171;
+  }
+  h1 {
+    font-size: clamp(48px, 6vw, 78px);
+    line-height: 1.08;
+    letter-spacing: -0.055em;
+    font-weight: 500;
+    margin: 26px 0;
+  }
+  h1 span {
+    color: #707987;
+  }
+  .intro > p:last-child {
+    line-height: 1.7;
+    color: #586370;
+    font-size: 17px;
+  }
+  .design-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 58px 32px;
+  }
+  .thumbnail {
+    display: block;
+    aspect-ratio: 1.53;
+    background: white;
+    border: 1px solid #d9dde3;
+    padding: 25px 30px;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .thumbnail:hover {
+    transform: translateY(-4px);
+  }
+  .mini-nav {
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+  }
+  .mini-nav span {
+    font-size: 7px;
+    letter-spacing: 1px;
+    margin-top: 5px;
+  }
+  .mini-body {
+    padding-top: 42px;
+  }
+  small {
+    font-size: 7px;
+    letter-spacing: 1.4px;
+  }
+  .mini-body strong {
+    display: block;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.14;
+    letter-spacing: -1px;
+    margin-top: 14px;
+  }
+  .mini-body p {
+    font-size: 9px;
+    margin-top: 14px;
+    color: #616974;
+  }
+  .mini-bottom {
+    border-top: 1px solid #d9dde3;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding-top: 12px;
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+  .editorial strong {
+    font-family: Georgia, serif;
+  }
+  .editorial em {
+    color: #244bea;
+  }
+  .swiss {
+    background: #f1f0eb;
+  }
+  .swiss .mini-body {
+    padding-top: 20px;
+  }
+  .swiss strong {
+    font-size: 47px;
+    line-height: 0.88;
+    font-weight: 800;
+    letter-spacing: -2px;
+  }
+  .swiss strong span {
+    color: #c22e24;
+  }
+  .swiss .mini-bottom {
+    border-color: #222;
+  }
+  .notebook {
+    background: #f3f6f2;
+    font-family: monospace;
+  }
+  .notebook .mini-body {
+    padding-left: 42px;
+    border-left: 1px solid #b6c9b8;
+  }
+  .notebook strong {
+    font-size: 24px;
+    line-height: 1.4;
+  }
+  .notebook strong span {
+    color: #286147;
+  }
+  .dark {
+    background: #141820;
+    color: #edf0f6;
+    border-color: #282e38;
+  }
+  .dark .mini-body strong {
+    font-size: 28px;
+  }
+  .dark em {
+    color: #a8b5d5;
+    font-style: normal;
+  }
+  .dark p {
+    color: #bbc5d7;
+  }
+  .dark .mini-bottom {
+    border-color: #444b56;
+  }
+  .journal {
+    background: #f5f1e8;
+  }
+  .journal strong {
+    font-family: Georgia, serif;
+    font-size: 30px;
+  }
+  .journal em {
+    color: #3d5943;
+  }
+  .journal .mini-nav {
+    font-family: Georgia, serif;
+  }
+  .card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+  .card-heading h2 {
+    font-size: 20px;
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: -0.4px;
+  }
+  .card-heading h2 span {
+    font-size: 12px;
+    color: #657184;
+    margin-right: 14px;
+    font-family: monospace;
+  }
+  .card-heading > a {
+    font-size: 24px;
+  }
+  .description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #596473;
+    max-width: 450px;
+  }
+  .card-links {
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+  }
+  .card-links a {
+    border-bottom: 1px solid #b9c0c9;
+    padding-bottom: 4px;
+  }
+  footer {
+    margin-top: 90px;
+    border-top: 1px solid #d9dde3;
+    padding: 28px 0 45px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #596473;
+  }
+  footer span {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    margin-top: 12px;
+  }
+  @media (max-width: 700px) {
+    header,
+    main {
+      padding-left: 22px;
+      padding-right: 22px;
+    }
+    header {
+      height: 80px;
+    }
+    .local {
+      font-size: 8px;
+    }
+    .intro {
+      padding: 45px 0;
+    }
+    .design-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .thumbnail {
+      padding: 24px;
+    }
+    .mini-body {
+      padding-top: 30px;
+    }
+    footer {
+      display: block;
+    }
+    .mini-body strong {
+      font-size: 28px;
+    }
+    .swiss strong {
+      font-size: 43px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .thumbnail {
+      transition: none;
+    }
+  }
+</style>
