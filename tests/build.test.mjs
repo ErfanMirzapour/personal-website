@@ -28,6 +28,13 @@ test('home has canonical, metadata, verified Person schema and no phone', () => 
   );
   assert.equal(schema['@type'], 'Person');
   assert.equal(schema.name, 'Erfan Mirzapour');
+  assert.deepEqual(schema.sameAs, [
+    'https://www.linkedin.com/in/erfanmirzapour/',
+    'https://github.com/ErfanMirzapour',
+    'https://t.me/ErfanM96',
+    'https://www.instagram.com/erfan_m96x/',
+  ]);
+  assert.match(html, /<body class="notebook">/);
   assert.doesNotMatch(html, /989367025844/);
 });
 test('sitemap, writing empty state, 404 and release guard are present', () => {

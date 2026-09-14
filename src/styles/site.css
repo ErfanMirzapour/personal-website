@@ -377,6 +377,7 @@ ul {
 }
 .site-footer nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 24px;
 }
 .copyright {
@@ -669,11 +670,11 @@ body.swiss {
 }
 /* 03 — Notebook: index rail, annotations, and compact technical typography. */
 body.notebook {
-  --paper: #f7f9f6;
-  --ink: #26372e;
-  --muted: #59665d;
-  --line: #cdd7ce;
-  --accent: #286344;
+  --paper: #13171e;
+  --ink: #edf0f7;
+  --muted: #abb4c4;
+  --line: #353c47;
+  --accent: #a4bfff;
   --display: 'Courier New', monospace;
   --body: Arial, Helvetica, sans-serif;
 }
@@ -698,7 +699,7 @@ body.notebook {
 }
 .notebook-index {
   font:
-    12px/1.6 'Courier New',
+    13px/1.6 'Courier New',
     monospace;
   padding-top: 52px;
   display: flex;
@@ -707,6 +708,9 @@ body.notebook {
   align-self: start;
   position: sticky;
   top: 30px;
+}
+.notebook-index a {
+  font-weight: 700;
 }
 .index-label {
   font-weight: bold;
@@ -766,10 +770,8 @@ body.notebook {
 }
 .notebook .section-label h2 {
   font-family: 'Courier New', monospace;
-  font-size: 16px;
-}
-.notebook .section-label > span {
-  color: var(--accent);
+  font-size: 20px;
+  font-weight: 700;
 }
 .notebook .large-copy {
   font-family: Arial, sans-serif;
@@ -785,6 +787,12 @@ body.notebook {
   font-size: 13px;
   border: 1px solid var(--line);
   padding: 2px 7px;
+}
+.notebook .skill-group li.is-branded {
+  color: var(--badge-text);
+  background: var(--badge-bg);
+  border-color: transparent;
+  font-weight: 700;
 }
 .notebook .skill-group ul {
   gap: 7px;
@@ -809,6 +817,38 @@ body.notebook {
 }
 .notebook .contact-section em {
   font-style: normal;
+}
+.notebook .contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 22px;
+}
+.notebook .copy-email {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  font:
+    13px/1.4 'Courier New',
+    monospace;
+  padding: 9px 12px;
+  cursor: pointer;
+}
+.notebook .copy-email:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.notebook .copy-email:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+.notebook .copy-status {
+  min-height: 1.4em;
+  color: var(--muted);
+  font:
+    12px/1.4 'Courier New',
+    monospace;
 }
 .notebook .page-intro h1 {
   font-size: 60px;
@@ -1268,7 +1308,7 @@ body.journal {
     display: none;
   }
   .notebook-index a {
-    font-size: 10px;
+    font-size: 12px;
   }
   .notebook .hero {
     padding-top: 30px;

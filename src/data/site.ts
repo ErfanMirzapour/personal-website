@@ -5,6 +5,8 @@ export const site = {
   email: 'erfanmirzapour1@gmail.com',
   linkedin: 'https://www.linkedin.com/in/erfanmirzapour/',
   github: 'https://github.com/ErfanMirzapour',
+  telegram: 'https://t.me/ErfanM96',
+  instagram: 'https://www.instagram.com/erfan_m96x/',
   description:
     'Erfan Mirzapour is a senior frontend engineer focused on performance, accessibility, and maintainable web experiences. Open to full-time opportunities.',
   intro:
@@ -65,6 +67,37 @@ export const skills = [
     ],
   },
 ];
+
+export const technologyColors: Record<
+  string,
+  { background: string; color: string }
+> = {
+  JavaScript: { background: '#f7df1e', color: '#171717' },
+  TypeScript: { background: '#3178c6', color: '#ffffff' },
+  React: { background: '#61dafb', color: '#10252b' },
+  Svelte: { background: '#ff3e00', color: '#1d0902' },
+  Angular: { background: '#dd0031', color: '#ffffff' },
+  Vue: { background: '#42b883', color: '#10251c' },
+  Solid: { background: '#446b9e', color: '#ffffff' },
+  Astro: { background: '#ff5d01', color: '#241004' },
+  'Next.js': { background: '#000000', color: '#ffffff' },
+  Nuxt: { background: '#00dc82', color: '#08271b' },
+  Remix: { background: '#000000', color: '#ffffff' },
+  Vite: { background: '#646cff', color: '#101127' },
+  'Tailwind CSS': { background: '#38bdf8', color: '#082f49' },
+  'shadcn/ui': { background: '#18181b', color: '#ffffff' },
+  'Node.js': { background: '#339933', color: '#071807' },
+  Bun: { background: '#fbf0df', color: '#26221c' },
+  Deno: { background: '#000000', color: '#ffffff' },
+  PostgreSQL: { background: '#4169e1', color: '#ffffff' },
+  SQLite: { background: '#0f5b78', color: '#ffffff' },
+  MongoDB: { background: '#47a248', color: '#071607' },
+  Prisma: { background: '#2d3748', color: '#ffffff' },
+  Vitest: { background: '#729b1b', color: '#101804' },
+  Jest: { background: '#c21325', color: '#ffffff' },
+  Cypress: { background: '#1b1e2e', color: '#ffffff' },
+  Storybook: { background: '#ff4785', color: '#2b0715' },
+};
 export const strengths = [
   {
     title: 'Working across teams',

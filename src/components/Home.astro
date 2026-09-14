@@ -1,5 +1,12 @@
 ---
-import { site, skills, strengths, experience, interests } from '../data/site';
+import {
+  site,
+  skills,
+  strengths,
+  experience,
+  interests,
+  technologyColors,
+} from '../data/site';
 import { type Design } from '../data/designs';
 import { getPublishedPosts, formatDate } from '../lib/posts';
 interface Props {
@@ -15,11 +22,11 @@ const posts = await getPublishedPosts();
   {design === 'notebook' && (
     <aside class="notebook-index" aria-label="On this page">
       <span class="index-label">~/erfan</span>
-      <a href="#about">01 / about</a>
-      <a href="#expertise">02 / toolkit</a>
-      <a href="#experience">03 / experience</a>
-      <a href="#beyond">04 / off-screen</a>
-      <a href={`${base}/blog/`}>05 / writing</a>
+      <a href="#about">about</a>
+      <a href="#expertise">toolkit</a>
+      <a href="#experience">experience</a>
+      <a href="#beyond">off-screen</a>
+      <a href={`${base}/blog/`}>writing</a>
       <span class="index-foot">
         Tehran, Iran
         <br />
@@ -32,7 +39,7 @@ const posts = await getPublishedPosts();
       <div class="hero-top">
         <span class="eyebrow">
           {design === 'notebook'
-            ? '// frontend engineer'
+            ? '// senior frontend engineer'
             : 'Senior Frontend Engineer'}
         </span>
         <span class="location">Tehran, Iran</span>
@@ -104,7 +111,7 @@ const posts = await getPublishedPosts();
     </section>
     <section id="about" class="content-section about-section">
       <div class="section-label">
-        <span>01</span>
+        {design !== 'notebook' && <span>01</span>}
         <h2>A little context</h2>
       </div>
       <div class="section-body">
@@ -124,7 +131,7 @@ const posts = await getPublishedPosts();
     </section>
     <section id="expertise" class="content-section">
       <div class="section-label">
-        <span>02</span>
+        {design !== 'notebook' && <span>02</span>}
         <h2>My toolkit</h2>
       </div>
       <div class="section-body skills-grid">
@@ -132,9 +139,21 @@ const posts = await getPublishedPosts();
           <div class="skill-group">
             <h3>{group.name}</h3>
             <ul>
-              {group.items.map((item) => (
-                <li>{item}</li>
-              ))}
+              {group.items.map((item) => {
+                const colors = technologyColors[item];
+                return (
+                  <li
+                    class:list={{ 'is-branded': colors }}
+                    style={
+                      colors
+                        ? `--badge-bg:${colors.background};--badge-text:${colors.color}`
+                        : undefined
+                    }
+                  >
+                    {item}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}
@@ -142,7 +161,7 @@ const posts = await getPublishedPosts();
     </section>
     <section id="experience" class="content-section">
       <div class="section-label">
-        <span>03</span>
+        {design !== 'notebook' && <span>03</span>}
         <h2>Along the way</h2>
       </div>
       <div class="section-body experience-list">
@@ -174,7 +193,7 @@ const posts = await getPublishedPosts();
     </section>
     <section id="beyond" class="content-section beyond-section">
       <div class="section-label">
-        <span>04</span>
+        {design !== 'notebook' && <span>04</span>}
         <h2>Off-screen</h2>
       </div>
       <div class="section-body">
@@ -187,9 +206,11 @@ const posts = await getPublishedPosts();
         <ul class="interests">
           {interests.map((interest, index) => (
             <li>
-              <span class="interest-number" aria-hidden="true">
-                0{index + 1}
-              </span>
+              {design !== 'notebook' && (
+                <span class="interest-number" aria-hidden="true">
+                  0{index + 1}
+                </span>
+              )}
               {interest}
             </li>
           ))}
@@ -198,7 +219,7 @@ const posts = await getPublishedPosts();
     </section>
     <section class="content-section writing-section">
       <div class="section-label">
-        <span>05</span>
+        {design !== 'notebook' && <span>05</span>}
         <h2>Writing</h2>
       </div>
       <div class="section-body">
@@ -241,9 +262,40 @@ const posts = await getPublishedPosts();
         <br />
         <em>something good.</em>
       </h2>
-      <a class="contact-email" href={`mailto:${site.email}`}>
-        {site.email} <span aria-hidden="true">↗</span>
-      </a>
+      <div class="contact-actions">
+        <a class="contact-email" href={`mailto:${site.email}`}>
+          Write an email <span aria-hidden="true">↗</span>
+        </a>
+        <button
+          class="copy-email"
+          type="button"
+          data-copy-email
+          data-email={site.email}
+        >
+          Copy {site.email}
+        </button>
+        <span class="copy-status" aria-live="polite"></span>
+      </div>
     </section>
   </div>
 </main>
+
+<script>
+  const copyButton =
+    document.querySelector<HTMLButtonElement>('[data-copy-email]');
+
+  copyButton?.addEventListener('click', async () => {
+    const email = copyButton.dataset.email;
+    const status =
+      copyButton.parentElement?.querySelector<HTMLElement>('.copy-status');
+
+    if (!email || !status) return;
+
+    try {
+      await navigator.clipboard.writeText(email);
+      status.textContent = 'Email copied.';
+    } catch {
+      status.textContent = `Copy this address: ${email}`;
+    }
+  });
+</script>

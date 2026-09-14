@@ -73,3 +73,33 @@ test('gallery exposes all five designs and preview metadata', async ({
     ),
   ).toBeTruthy();
 });
+
+test('selected notebook direction uses the requested production content', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.locator('body')).toHaveClass(/notebook/);
+  await expect(page.locator('.notebook-index')).not.toContainText(
+    /01|02|03|04|05/,
+  );
+  await expect(page.locator('.section-label > span')).toHaveCount(0);
+  await expect(page.locator('.interest-number')).toHaveCount(0);
+  await expect(page.locator('.skill-group li.is-branded')).not.toHaveCount(0);
+  await expect(
+    page.locator('.skill-group li', { hasText: 'Accessibility' }),
+  ).not.toHaveClass(/is-branded/);
+  await expect(page.getByRole('link', { name: 'Telegram ↗' })).toHaveAttribute(
+    'href',
+    'https://t.me/ErfanM96',
+  );
+  await expect(page.getByRole('link', { name: 'Instagram ↗' })).toHaveAttribute(
+    'href',
+    'https://www.instagram.com/erfan_m96x/',
+  );
+  await page
+    .getByRole('button', { name: /Copy erfanmirzapour1@gmail.com/ })
+    .click();
+  await expect(page.locator('.copy-status')).toContainText(
+    /Email copied|Copy this address/,
+  );
+});
