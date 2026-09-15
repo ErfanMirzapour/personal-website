@@ -122,3 +122,37 @@ test('selected notebook direction uses the requested production content', async 
     .analyze();
   expect(productionScan.violations).toEqual([]);
 });
+
+test('selected writing and article templates work across browser engines', async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+
+  await page.goto('/blog/');
+  await expect(page.getByRole('heading', { name: 'Writing.' })).toBeVisible();
+  const skipLink = page.getByRole('link', { name: 'Skip to content' });
+  await skipLink.focus();
+  await expect(skipLink).toBeFocused();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBeTruthy();
+
+  await page.goto('/designs/notebook/blog/reading-sample/');
+  await expect(page.locator('.sample-notice')).toContainText(
+    'Development sample',
+  );
+  await expect(page.locator('pre')).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBeTruthy();
+  const articleScan = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+    .analyze();
+  expect(articleScan.violations).toEqual([]);
+  expect(errors).toEqual([]);
+});
