@@ -12,7 +12,7 @@ if (!['editorial', 'swiss', 'notebook', 'dark', 'journal'].includes(design)) {
   );
   process.exit(1);
 }
-const result = spawnSync('pnpm', ['build'], {
+const result = spawnSync('bun', ['run', 'build'], {
   stdio: 'inherit',
   env: {
     ...process.env,

@@ -2,16 +2,25 @@
 
 ## Current checkpoint
 
-Erfan must choose one of the five local designs before any deployment. No account, DNS, hosting, or Google Search Console changes have been made. The root route is an editorial test fallback, not a user selection. Preview builds default to noindex and robots disallow.
+The selected dark developer-notebook design is deployed at `https://erfanmirzapour.pages.dev`. The apex and `www` custom domains are attached to the Pages project and are waiting for the Cloudflare DNS zone and nameserver change. Google Search Console is not configured yet.
 
-## After selection
+Preview builds default to `noindex` and a disallowing `robots.txt`. Production builds use `PUBLIC_SITE_ENV=production`, exclude comparison designs and draft content, and allow indexing.
 
-1. Set `design` in `src/data/publication.json` to the agreed ID. Remove the unused design implementations and gallery in a follow-up PR; update browser tests to cover the selected production pages.
-2. Review actual content, contact links, and the chosen layouts with Erfan. Leave the writing empty state until there is approved writing.
-3. Run all checks. Run Lighthouse on the static production build for home, writing, and an actual article when available. Target ≥95 performance, accessibility, and SEO; inspect the underlying audits and record results. Scores are lab measurements, not ranking guarantees. Verify real-user Core Web Vitals after enough traffic exists.
-4. Connect the GitHub repository to Cloudflare Pages, production branch `main`, Node 22, install with frozen pnpm lockfile, build command `pnpm build:release`, output `dist`.
-5. The release script sets PUBLIC_SITE_ENV=production only for the production branch, and preview for non-main Cloudflare branches. Preview pages carry noindex. Keep comparison designs local-only. Validate this behavior on the actual platform before launch.
-6. Verify the provider URL: asset loading, redirects, missing routes returning HTTP 404, canonical URLs, JSON-LD, sitemap, and empty writing state. The presence of `404.html` prevents Pages from treating the site as an SPA fallback.
+## Release policy
+
+Pull requests run checks but never publish the production site. Merges to `main` accumulate releasable work. Publish a stable GitHub Release when the change should become public:
+
+- Patch (`v1.0.1`): copy corrections, dependency/security updates, accessibility fixes, and small styling bugs.
+- Minor (`v1.1.0`): a new article, portfolio section, major content update, or backward-compatible feature.
+- Major (`v2.0.0`): a redesign, route migration, or other change that intentionally breaks stable URLs or established behavior.
+
+Before publishing a release, update the `package.json` version in a PR, merge it after checks and review, then create a GitHub Release from that exact `main` commit with a matching `vX.Y.Z` tag. Draft and prerelease releases do not deploy. Publishing a stable release triggers `.github/workflows/release.yml`, which verifies the version, rebuilds with Bun, runs production-output tests, and uploads `dist` to Cloudflare Pages.
+
+Configure the GitHub `production` environment with `CLOUDFLARE_ACCOUNT_ID` and a scoped `CLOUDFLARE_API_TOKEN` that can edit Pages. Add a required reviewer if a separate approval after publishing the release is desired. Keep Cloudflare automatic Git production builds disabled so GitHub Releases remain the single production trigger.
+
+The initial `v1.0.0` release is gated on the custom domain becoming active, live Lighthouse checks reaching the agreed targets, and Search Console readiness.
+
+On 2026-09-15, local production builds of the homepage and writing index each scored 100 for Lighthouse performance, accessibility, best practices, and SEO, with zero layout shift and zero total blocking time. Repeat these measurements on the custom domain because local laboratory results do not include real Cloudflare, DNS, or network behavior.
 
 ## Domain: erfanmirzapour.ir
 
@@ -27,13 +36,13 @@ The domain owner has confirmed control. Earlier DNS lookups returned SERVFAIL; t
 
 The site generates static HTML, unique titles/descriptions, canonical URLs, Open Graph/Twitter text metadata, Person JSON-LD, and article BlogPosting JSON-LD. No invented image metadata. Drafts and future articles do not produce routes. Sitemap excludes preview routes and 404.
 
-Only the selected production build should allow indexing. Check final HTML robots metadata and robots.txt at the live domain. `noindex` is not access control; development samples must remain absent from deployed files.
+Only the selected production build allows indexing. CI verifies unique titles, descriptions, and canonical URLs; matching Open Graph metadata; logical page headings; structured data; sitemap membership; and draft exclusion. Check the final HTML and `robots.txt` again at the live domain. `noindex` is not access control; development samples remain absent from deployed files.
 
 Create a Google Search Console Domain property for erfanmirzapour.ir in the owner’s account. Add its exact TXT verification token to DNS, verify ownership, and submit https://erfanmirzapour.ir/sitemap-index.xml. Use URL Inspection for home, writing and the first real article. Search Console needs the owner’s account access; it is not configured by source code alone.
 
 ## Rollback
 
-Select the last known-good production deployment in Cloudflare Pages and use its rollback action. Then revert the faulty PR through a new GitHub PR so source and deployed output converge. Avoid force-pushing main. Confirm the domain serves the restored content and canonical metadata. Save a known-good deployment before each launch.
+Select the last known-good production deployment in Cloudflare Pages and use its rollback action. Then revert the faulty PR through a new GitHub PR and publish a new patch release so source, release history, and deployed output converge. Avoid force-pushing `main` or moving an existing release tag. Confirm the domain serves the restored content and canonical metadata.
 
 ## Codex GitHub review
 

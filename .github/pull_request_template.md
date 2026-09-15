@@ -8,4 +8,4 @@
 
 ## Publication
 
-Design selection is required before the production release.
+State whether this PR should be included in the next patch, minor, or major release. Merging does not deploy production; publishing a stable GitHub Release does.

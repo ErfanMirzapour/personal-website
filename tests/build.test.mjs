@@ -1,4 +1,4 @@
-import { test } from 'node:test';
+import { test } from 'bun:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
@@ -44,5 +44,9 @@ test('sitemap, writing empty state, 404 and release guard are present', () => {
   const xml = read('sitemap-0.xml');
   assert.match(xml, /https:\/\/erfanmirzapour.ir\/blog\//);
   assert.doesNotMatch(xml, /designs|404|welcome-draft/);
-  assert.match(read('robots.txt'), /Disallow: \//);
+  assert.match(read('robots.txt'), /Allow: \//);
+  assert.match(
+    read('robots.txt'),
+    /Sitemap: https:\/\/erfanmirzapour.ir\/sitemap-index.xml/,
+  );
 });

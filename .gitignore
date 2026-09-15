@@ -9,4 +9,5 @@ playwright-report/
 test-results/
 artifacts/
 
+.bun/
 .pnpm-store/
