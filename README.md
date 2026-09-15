@@ -1,19 +1,19 @@
 # Erfan Mirzapour — personal website
 
-Astro + TypeScript portfolio and writing site for **erfanmirzapour.ir**. Content is kept in Git; no CMS, database, analytics, or contact form is required.
+Astro + TypeScript portfolio and writing site for **erfanmirzapour.ir**. Content is kept in Git; no CMS, database, or contact form is required.
 
 ## Run locally
 
-Requires Node.js 22.12+ and pnpm 9.12.1.
+Requires Bun 1.4.2 or newer.
 
 ```sh
-pnpm install --frozen-lockfile
-pnpm dev
+bun install --frozen-lockfile
+bun run dev
 ```
 
 Open **http://127.0.0.1:4321/designs/** to compare five working designs. Each has a homepage, writing index, and clearly marked sample article. These routes exist only during development.
 
-**No design has been selected and nothing is deployed.** The root route uses editorial solely as a build-test fallback. `pnpm build:release` refuses publication until `design` is set after Erfan’s choice.
+The selected production design is the dark developer notebook. The comparison routes are development-only and production builds exclude them. The provider deployment is available at **https://erfanmirzapour.pages.dev** while the custom domain is being activated.
 
 ## Content
 
@@ -37,17 +37,17 @@ Add the body below the frontmatter. Use `updatedDate` only for a real revision. 
 ## Checks
 
 ```sh
-pnpm check
-pnpm build
-pnpm test:build
-pnpm exec playwright install chromium
-pnpm test
+bun run check
+bun run build:release
+bun run test:build
+bunx playwright install chromium firefox webkit
+bun run test
 ```
 
-Browser tests cover each design on desktop and mobile, keyboard navigation, writing routes, overflow, and axe accessibility checks. Build tests check metadata, schema, sitemap and unpublished-content exclusion. GitHub Actions runs these on PRs and main.
+Browser tests cover the production design in Chromium, Firefox, and WebKit on desktop and mobile. They verify keyboard navigation, writing routes, overflow, and axe accessibility checks. Build tests check metadata, schema, sitemap, and unpublished-content exclusion. GitHub Actions runs these checks on PRs and `main`.
 
 ## Workflow
 
-Create a linked issue → branch under `codex/` → implement and test → open a PR → request Codex review → address findings → merge after checks. The initial design PR remains open for selection. Hosting is not connected yet.
+Create a linked issue → branch under `codex/` → implement and test → open a PR → request Codex review → address findings → merge after checks. Merging prepares a release but does not deploy production. A stable GitHub Release with a tag matching `package.json` (for example, `v1.0.0`) triggers the production deployment.
 
-See [deployment and SEO runbook](docs/deployment.md) for launch, DNS, indexing, and rollback.
+See the [deployment and SEO runbook](docs/deployment.md) for launch, releases, DNS, indexing, and rollback, and [platform decisions](docs/platform.md) for browser support, images, and Cloudflare services.

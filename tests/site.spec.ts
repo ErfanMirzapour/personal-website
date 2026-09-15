@@ -4,7 +4,12 @@ const designs = ['editorial', 'swiss', 'notebook', 'dark', 'journal'];
 for (const design of designs) {
   test(`${design}: homepage, navigation, writing, and readable article`, async ({
     page,
+    browserName,
   }) => {
+    test.skip(
+      browserName !== 'chromium',
+      'Design comparison routes only need one browser; production routes run in all engines.',
+    );
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
     const base = `/designs/${design}`;
@@ -60,7 +65,12 @@ for (const design of designs) {
 }
 test('gallery exposes all five designs and preview metadata', async ({
   page,
+  browserName,
 }) => {
+  test.skip(
+    browserName !== 'chromium',
+    'Design comparison routes only need one browser; production routes run in all engines.',
+  );
   await page.goto('/designs/');
   await expect(page.locator('main article')).toHaveCount(5);
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
@@ -102,4 +112,47 @@ test('selected notebook direction uses the requested production content', async 
   await expect(page.locator('.copy-status')).toContainText(
     /Email copied|Copy this address/,
   );
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBeTruthy();
+  const productionScan = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+    .analyze();
+  expect(productionScan.violations).toEqual([]);
+});
+
+test('selected writing and article templates work across browser engines', async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+
+  await page.goto('/blog/');
+  await expect(page.getByRole('heading', { name: 'Writing.' })).toBeVisible();
+  const skipLink = page.getByRole('link', { name: 'Skip to content' });
+  await skipLink.focus();
+  await expect(skipLink).toBeFocused();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBeTruthy();
+
+  await page.goto('/designs/notebook/blog/reading-sample/');
+  await expect(page.locator('.sample-notice')).toContainText(
+    'Development sample',
+  );
+  await expect(page.locator('pre')).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBeTruthy();
+  const articleScan = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+    .analyze();
+  expect(articleScan.violations).toEqual([]);
+  expect(errors).toEqual([]);
 });

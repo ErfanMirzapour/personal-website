@@ -9,14 +9,14 @@ export default defineConfig({
   reporter: process.env.CI ? 'github' : 'list',
   use: { baseURL: 'http://127.0.0.1:4321', trace: 'retain-on-failure' },
   projects: [
-    { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
-    {
-      name: 'mobile',
-      use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium' },
-    },
+    { name: 'chromium-desktop', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox-desktop', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit-desktop', use: { ...devices['Desktop Safari'] } },
+    { name: 'chromium-mobile', use: { ...devices['Pixel 7'] } },
+    { name: 'webkit-mobile', use: { ...devices['iPhone 13'] } },
   ],
   webServer: {
-    command: 'pnpm dev',
+    command: 'bun run dev',
     url: 'http://127.0.0.1:4321/designs/',
     reuseExistingServer: !process.env.CI,
   },

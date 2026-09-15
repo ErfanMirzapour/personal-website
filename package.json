@@ -1,11 +1,11 @@
 {
   "name": "erfan-personal-website",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
-  "packageManager": "pnpm@9.12.1",
+  "packageManager": "bun@1.4.2",
   "engines": {
-    "node": ">=22.12.0"
+    "bun": ">=1.4.2"
   },
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
@@ -13,11 +13,15 @@
     "preview": "astro preview --host 127.0.0.1",
     "check": "astro check",
     "test": "playwright test",
-    "test:build": "node --test tests/build.test.mjs tests/content-pipeline.test.mjs",
-    "build:release": "node scripts/release.mjs",
+    "test:build": "bun test tests/build.test.mjs tests/content-pipeline.test.mjs tests/seo.test.mjs",
+    "build:release": "bun scripts/release.mjs",
+    "release:verify": "bun scripts/verify-release.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
+  "browserslist": [
+    "baseline newly available"
+  ],
   "dependencies": {
     "@astrojs/mdx": "^8.0.1",
     "@astrojs/sitemap": "^3.7.4",
