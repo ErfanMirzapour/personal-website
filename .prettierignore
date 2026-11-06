@@ -1,5 +1,4 @@
 bun.lock
-pnpm-lock 2.yaml
 dist
 node_modules
 .astro

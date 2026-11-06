@@ -46,4 +46,4 @@ Adding storage or Workers today would create bindings, security responsibilities
 - Semantic landmarks, visible focus states, skip navigation, reduced-motion behavior, fluid sizing, responsive layouts, and automated axe checks form the accessibility baseline.
 - Every indexable page has a unique title, description, canonical URL, social text metadata, and appropriate structured data. Production emits a sitemap and crawlable robots policy; drafts and development routes stay out of the build.
 
-After the custom domain is active, run Lighthouse against the real homepage and writing page, verify security headers with the deployed response, and monitor Search Console and real-user Core Web Vitals instead of relying only on laboratory scores.
+After the custom domain is active, run Lighthouse against the real homepage, verify security headers with the deployed response, and monitor Search Console and real-user Core Web Vitals instead of relying only on laboratory scores.

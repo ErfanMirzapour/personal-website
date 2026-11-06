@@ -1,0 +1,1187 @@
+---
+import '@fontsource-variable/unbounded';
+import '@fontsource-variable/onest';
+import { Picture } from 'astro:assets';
+import portrait from '../assets/images/erfan-portrait.jpg';
+import SocialIcons from './SocialIcons.astro';
+import { site, skills, experience, education, year } from '../data/site';
+
+// Three tilted electron shells, like the classic atom symbol.
+const shells = [
+  { tilt: 0, dur: 28, items: ['TypeScript', 'React', 'Svelte', 'Astro'] },
+  {
+    tilt: 60,
+    dur: 36,
+    items: ['Accessibility', 'Vue', 'Performance', 'Angular'],
+  },
+  {
+    tilt: -60,
+    dur: 44,
+    items: ['Node.js', 'Next.js', 'Playwright', 'PostgreSQL'],
+  },
+];
+
+// Skill groups read like particle families in the Standard Model chart.
+const families = ['ion', 'quark', 'lepton', 'photon', 'boson'];
+const symbols: Record<string, string> = {
+  JavaScript: 'Js',
+  TypeScript: 'Ts',
+  Accessibility: 'A11y',
+  'Responsive design': 'Rd',
+  Performance: 'Pf',
+  React: 'Re',
+  Svelte: 'Sv',
+  Angular: 'Ng',
+  Vue: 'Vu',
+  Solid: 'So',
+  HTMX: 'Hx',
+  Astro: 'As',
+  'Next.js': 'Nx',
+  Nuxt: 'Nu',
+  Remix: 'Rx',
+  Vite: 'Vi',
+  'Tailwind CSS': 'Tw',
+  'shadcn/ui': 'Sh',
+  'Node.js': 'Nd',
+  Bun: 'Bn',
+  Deno: 'De',
+  PostgreSQL: 'Pg',
+  SQLite: 'Sq',
+  MongoDB: 'Mg',
+  Prisma: 'Pr',
+  Drizzle: 'Dz',
+  Vitest: 'Vt',
+  Jest: 'Je',
+  'Testing Library': 'Tl',
+  Playwright: 'Pw',
+  Cypress: 'Cy',
+  Storybook: 'Sb',
+};
+
+const nameWords = site.name.split(' ');
+const summaryWords = site.summary.map((p) => p.split(' '));
+const totalWords = summaryWords.flat().length;
+let wordIndex = 0;
+---
+
+<div class="page">
+  <canvas class="cosmos" data-cosmos aria-hidden="true"></canvas>
+  <div class="progress" aria-hidden="true"></div>
+
+  <header class="top" data-header>
+    <a class="mark" href="#main" aria-label="Erfan Mirzapour, back to top">
+      EM
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#skills">Skills</a>
+      <a href="#career">Career</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-text">
+        <p class="role">
+          <span class="pulse" aria-hidden="true"></span>
+          {site.title}, {site.location}
+        </p>
+        <h1 id="hero-title">
+          <span class="sr-only">{site.name}</span>
+          <span class="name" aria-hidden="true">
+            {nameWords.map((word, w) => (
+              <span class="word">
+                {[...word].map((letter, i) => (
+                  <span class="letter" style={`--i:${w * 6 + i}`}>
+                    {letter}
+                  </span>
+                ))}
+              </span>
+            ))}
+          </span>
+        </h1>
+        <p class="intro">{site.intro}</p>
+        <div class="cta">
+          <a class="btn primary" href={site.telegram}>
+            Message me on Telegram
+          </a>
+          <a class="btn" href={`mailto:${site.email}`}>
+            Send an email
+          </a>
+        </div>
+      </div>
+
+      <div class="atom-wrap">
+        <div class="atom">
+          <div class="cloud" aria-hidden="true"></div>
+          {shells.map((shell) => (
+            <div
+              class="shell"
+              aria-hidden="true"
+              style={`--tilt:${shell.tilt}deg;--dur:${shell.dur}s`}
+            >
+              <span class="path" />
+              {shell.items.map((item, i) => (
+                <span
+                  class="electron"
+                  style={`--phase:${(360 / shell.items.length) * i + shell.tilt}deg`}
+                >
+                  <span class="tag">{item}</span>
+                </span>
+              ))}
+            </div>
+          ))}
+          <div class="nucleus">
+            <Picture
+              src={portrait}
+              formats={['avif', 'webp']}
+              widths={[240, 400, 640]}
+              sizes="(max-width: 860px) 34vw, 220px"
+              alt="Erfan Mirzapour at his desk, chin resting on his hand"
+              loading="eager"
+              fetchpriority="high"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about" aria-label="About me">
+      {summaryWords.map((words) => (
+        <p>
+          {words.map((word) => (
+            <span style={`--w:${wordIndex++ / totalWords}`}>{word} </span>
+          ))}
+        </p>
+      ))}
+    </section>
+
+    <section id="skills" class="block skills" aria-labelledby="skills-title">
+      <div class="block-head">
+        <h2 id="skills-title">Skills</h2>
+        <p>
+          My toolkit, grouped like particle families. These are the pieces
+          everything I build is made from.
+        </p>
+      </div>
+      <div class="families" data-spotlight>
+        {skills.map((group, g) => (
+          <div class={`family ${families[g]}`}>
+            <h3>{group.name}</h3>
+            <ul>
+              {group.items.map((item, i) => (
+                <li data-tile style={`--i:${i}`}>
+                  <span class="symbol" aria-hidden="true">
+                    {symbols[item] ?? item.slice(0, 2)}
+                  </span>
+                  <span class="tile-name">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section id="career" class="block career" aria-labelledby="career-title">
+      <div class="block-head">
+        <h2 id="career-title">Career</h2>
+        <p>Seven years, from the first freelance job to now.</p>
+      </div>
+      <ol class="timeline">
+        {experience.map((job) => (
+          <li class="epoch">
+            <span class="node" aria-hidden="true" />
+            <p class="years">
+              {year(job.start)}
+              {year(job.start) !== year(job.end) && <>–{year(job.end)}</>}
+            </p>
+            <div class="epoch-body">
+              <h3>{job.company}</h3>
+              <p class="job-role">{job.role}</p>
+              <p class="job-summary">{job.summary}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <div class="education">
+        <span class="mini-atom" aria-hidden="true"></span>
+        <div>
+          <h2>Education</h2>
+          <p>
+            {education.degree}
+            <br />
+            <strong>{education.school}</strong>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="block contact" aria-labelledby="contact-title">
+      <h2 id="contact-title">Say hello</h2>
+      <p class="contact-lead">
+        Telegram is where I reply fastest, usually the same day. Email works
+        well for anything longer.
+      </p>
+      <div class="pair">
+        <a class="particle tg" href={site.telegram}>
+          <span class="via">Telegram</span>
+          <strong>{site.telegramHandle}</strong>
+          <span class="note">Fastest reply</span>
+        </a>
+        <svg class="wave" viewBox="0 0 120 40" aria-hidden="true">
+          <path d="M0 20 Q 15 0 30 20 T 60 20 T 90 20 T 120 20" />
+          <path d="M0 20 Q 15 40 30 20 T 60 20 T 90 20 T 120 20" />
+        </svg>
+        <a class="particle" href={`mailto:${site.email}`}>
+          <span class="via">Email</span>
+          <strong>{site.email}</strong>
+          <span class="note">For longer messages</span>
+        </a>
+      </div>
+      <p class="avail">{site.availability}.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <nav aria-label="Social links">
+      <SocialIcons />
+    </nav>
+    <p>
+      © {new Date().getFullYear()} {site.name}
+    </p>
+  </footer>
+</div>
+
+<script>
+  import { startCosmos, trackHeader, trackSpotlight } from '../scripts/cosmos';
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-cosmos]');
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const spotlight = document.querySelector<HTMLElement>('[data-spotlight]');
+  if (canvas) startCosmos(canvas);
+  if (header) trackHeader(header);
+  if (spotlight) trackSpotlight(spotlight);
+</script>
+
+<style is:global>
+  @property --t {
+    syntax: '<angle>';
+    inherits: true;
+    initial-value: 0deg;
+  }
+  body {
+    background: #0c111a;
+  }
+</style>
+
+<style>
+  .page {
+    --void: #0c111a;
+    --deep: #111927;
+    --panel: #162131;
+    --line: rgb(148 170 200 / 0.16);
+    --text: #e6ecf5;
+    --muted: #9aa8bc;
+    --dim: #7a879b;
+    --ion: #7cc4ff;
+    --photon: #f5c97a;
+    --quark: #b59cff;
+    --lepton: #5fe0c8;
+    --boson: #ff9db4;
+    position: relative;
+    isolation: isolate;
+    min-height: 100vh;
+    background:
+      radial-gradient(
+        900px 600px at 85% 8%,
+        rgb(124 196 255 / 0.1),
+        transparent 70%
+      ),
+      radial-gradient(
+        700px 500px at 5% 40%,
+        rgb(181 156 255 / 0.07),
+        transparent 70%
+      ),
+      radial-gradient(
+        800px 600px at 60% 95%,
+        rgb(95 224 200 / 0.05),
+        transparent 70%
+      ),
+      var(--void);
+    color: var(--text);
+    font-family: 'Onest Variable', system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.65;
+    overflow-x: clip;
+  }
+  .page a:focus-visible {
+    outline: 2px solid var(--photon);
+    outline-offset: 3px;
+  }
+  .cosmos {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  /* Scroll progress, tinted like redshift. Decorative, so no fallback. */
+  .progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 60;
+    height: 2px;
+    background: linear-gradient(90deg, var(--ion), var(--quark), var(--photon));
+    transform-origin: 0 50%;
+    scale: 0 1;
+  }
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .progress {
+        animation: grow linear both;
+        animation-timeline: scroll(root);
+      }
+    }
+  }
+  @keyframes grow {
+    to {
+      scale: 1 1;
+    }
+  }
+
+  /* Header */
+  .top {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px max(16px, calc((100% - 1160px) / 2));
+    transition:
+      background 0.3s,
+      padding 0.3s,
+      border-color 0.3s;
+    border-bottom: 1px solid transparent;
+  }
+  .top[data-scrolled] {
+    padding-block: 10px;
+    background: rgb(12 17 26 / 0.72);
+    backdrop-filter: blur(14px) saturate(1.4);
+    border-bottom-color: var(--line);
+  }
+  .mark {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    font-family: 'Unbounded Variable', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+  .mark::before,
+  .mark::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgb(124 196 255 / 0.55);
+    border-radius: 50%;
+    transform: rotate(var(--r, 60deg)) scaleY(0.38);
+    transition: transform 0.5s;
+  }
+  .mark::after {
+    --r: -60deg;
+    border-color: rgb(245 201 122 / 0.5);
+  }
+  .mark:hover::before {
+    transform: rotate(240deg) scaleY(0.38);
+  }
+  .mark:hover::after {
+    transform: rotate(-240deg) scaleY(0.38);
+  }
+  .top nav {
+    display: flex;
+    gap: clamp(18px, 3vw, 32px);
+  }
+  .top nav a {
+    position: relative;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .top nav a::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 -4px;
+    height: 1px;
+    background: var(--ion);
+    scale: 0 1;
+    transition: scale 0.25s;
+  }
+  .top nav a:hover {
+    color: var(--text);
+  }
+  .top nav a:hover::after {
+    scale: 1 1;
+  }
+
+  /* Hero */
+  main > section,
+  .foot {
+    width: min(1160px, 100% - 32px);
+    margin-inline: auto;
+  }
+  .hero {
+    --atom: min(520px, 40vw);
+    view-timeline: --hero block;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: clamp(24px, 4vw, 64px);
+    min-height: 100svh;
+    padding-block: 110px 64px;
+  }
+  .role {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgb(22 33 49 / 0.6);
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--lepton);
+    box-shadow: 0 0 0 0 rgb(95 224 200 / 0.6);
+    animation: pulse 2.4s infinite;
+  }
+  @keyframes pulse {
+    70% {
+      box-shadow: 0 0 0 10px rgb(95 224 200 / 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgb(95 224 200 / 0);
+    }
+  }
+  h1 {
+    margin-block: 22px 20px;
+    font-family: 'Unbounded Variable', sans-serif;
+    font-size: clamp(42px, 7vw, 96px);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+  }
+  .word {
+    display: inline-block;
+    white-space: nowrap;
+    margin-right: 0.22em;
+  }
+  /* Each letter starts smeared across two states, then collapses into place. */
+  .letter {
+    display: inline-block;
+    animation: collapse 1.1s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+    animation-delay: calc(var(--i) * 45ms + 150ms);
+  }
+  @keyframes collapse {
+    from {
+      opacity: 0;
+      filter: blur(14px);
+      translate: 0 0.35em;
+      text-shadow:
+        -0.18em 0 0 var(--ion),
+        0.18em 0 0 var(--photon);
+    }
+    60% {
+      opacity: 1;
+      text-shadow:
+        -0.04em 0 0 var(--ion),
+        0.04em 0 0 var(--photon);
+    }
+    to {
+      filter: blur(0);
+      translate: 0 0;
+      text-shadow: none;
+    }
+  }
+  .intro {
+    max-width: 30ch;
+    color: var(--muted);
+    font-size: clamp(19px, 2vw, 23px);
+    line-height: 1.45;
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .btn {
+    position: relative;
+    padding: 14px 24px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgb(22 33 49 / 0.7);
+    font-weight: 600;
+    text-decoration: none;
+    overflow: hidden;
+    transition:
+      border-color 0.2s,
+      translate 0.2s,
+      box-shadow 0.3s;
+  }
+  .btn:hover {
+    border-color: var(--ion);
+    translate: 0 -2px;
+  }
+  .btn.primary {
+    border-color: var(--ion);
+    background: var(--ion);
+    color: var(--void);
+    box-shadow: 0 0 32px rgb(124 196 255 / 0.35);
+  }
+  .btn.primary:hover {
+    box-shadow: 0 0 48px rgb(124 196 255 / 0.55);
+  }
+  .btn.primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 35%,
+      rgb(255 255 255 / 0.55) 50%,
+      transparent 65%
+    );
+    translate: -100% 0;
+    transition: translate 0.6s;
+  }
+  .btn.primary:hover::after {
+    translate: 100% 0;
+  }
+
+  /* The atom: three tilted shells in real 3D around the portrait. */
+  .atom-wrap {
+    perspective: 1100px;
+    padding-inline: 48px;
+  }
+  .atom {
+    position: relative;
+    width: var(--atom);
+    aspect-ratio: 1;
+    transform-style: preserve-3d;
+    transform: rotateX(calc(var(--py, 0) * -10deg))
+      rotateY(calc(var(--px, 0) * 14deg));
+  }
+  .cloud {
+    position: absolute;
+    inset: 12%;
+    border-radius: 50%;
+    background:
+      radial-gradient(closest-side, rgb(124 196 255 / 0.32), transparent),
+      conic-gradient(
+        from 0deg,
+        rgb(181 156 255 / 0.25),
+        transparent 25%,
+        rgb(124 196 255 / 0.25) 50%,
+        transparent 75%,
+        rgb(181 156 255 / 0.25)
+      );
+    filter: blur(28px);
+    transform: translateZ(-80px);
+    animation:
+      breathe 7s ease-in-out infinite,
+      swirl 30s linear infinite;
+  }
+  @keyframes breathe {
+    50% {
+      scale: 1.12;
+      opacity: 0.75;
+    }
+  }
+  @keyframes swirl {
+    to {
+      rotate: 360deg;
+    }
+  }
+  .nucleus {
+    position: absolute;
+    inset: 32%;
+    border-radius: 50%;
+    padding: 3px;
+    background: conic-gradient(
+      from 210deg,
+      var(--ion),
+      var(--quark),
+      var(--photon),
+      var(--ion)
+    );
+    box-shadow:
+      0 0 40px rgb(124 196 255 / 0.4),
+      0 0 120px rgb(124 196 255 / 0.2);
+  }
+  .nucleus :global(picture),
+  .nucleus :global(img) {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+  .nucleus :global(img) {
+    object-fit: cover;
+    object-position: 50% 22%;
+  }
+  .shell {
+    --tilt-x: 72deg;
+    --r: calc(var(--atom) * 0.43);
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transform: rotateZ(var(--tilt)) rotateX(var(--tilt-x));
+    animation: orbit var(--dur) linear infinite;
+  }
+  @keyframes orbit {
+    to {
+      --t: 360deg;
+    }
+  }
+  .path {
+    position: absolute;
+    inset: calc(50% - var(--r));
+    border: 1px solid rgb(124 196 255 / 0.3);
+    border-radius: 50%;
+    box-shadow: 0 0 18px rgb(124 196 255 / 0.12) inset;
+  }
+  .electron {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-style: preserve-3d;
+    /* Move round the shell, then undo every rotation so the label faces us. */
+    transform: rotateZ(calc(var(--t) + var(--phase))) translateX(var(--r))
+      rotateZ(calc(-1 * (var(--t) + var(--phase))))
+      rotateX(calc(-1 * var(--tilt-x))) rotateZ(calc(-1 * var(--tilt)));
+  }
+  .tag {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    translate: -50% -50%;
+    padding: 5px 12px 5px 8px;
+    border: 1px solid rgb(124 196 255 / 0.35);
+    border-radius: 999px;
+    background: rgb(17 25 39 / 0.85);
+    font-size: clamp(11px, 1.1vw, 14px);
+    white-space: nowrap;
+  }
+  .tag::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ion);
+    box-shadow: 0 0 10px var(--ion);
+  }
+  .shell:nth-of-type(2) .tag::before {
+    background: var(--quark);
+    box-shadow: 0 0 10px var(--quark);
+  }
+  .shell:nth-of-type(3) .tag::before {
+    background: var(--photon);
+    box-shadow: 0 0 10px var(--photon);
+  }
+
+  /* Scroll parallax: the atom sinks and the text lifts away at different rates. */
+  @supports ((animation-timeline: view()) and (animation-range: exit)) {
+    @media (prefers-reduced-motion: no-preference) {
+      .atom-wrap,
+      .hero-text {
+        animation: linear both;
+        animation-timeline: --hero;
+        animation-range: exit 0% exit 100%;
+      }
+      .atom-wrap {
+        animation-name: sink;
+      }
+      .hero-text {
+        animation-name: lift;
+      }
+    }
+  }
+  @keyframes sink {
+    to {
+      translate: 0 30%;
+      scale: 0.8;
+      opacity: 0.15;
+    }
+  }
+  @keyframes lift {
+    to {
+      translate: 0 -40%;
+      opacity: 0;
+    }
+  }
+
+  /* About: words light up as you read down the page. */
+  .about {
+    max-width: 880px;
+    padding-block: clamp(48px, 10vw, 140px);
+    view-timeline: --about block;
+    font-size: clamp(22px, 3vw, 36px);
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+  }
+  .about p + p {
+    margin-top: 0.8em;
+  }
+  @supports ((animation-timeline: view()) and (animation-range: cover)) {
+    @media (prefers-reduced-motion: no-preference) {
+      .about span {
+        animation: light linear both;
+        animation-timeline: --about;
+        animation-range: cover calc(18% + var(--w) * 40%) cover
+          calc(22% + var(--w) * 40%);
+      }
+    }
+  }
+  @keyframes light {
+    from {
+      color: var(--dim);
+    }
+    to {
+      color: var(--text);
+    }
+  }
+
+  /* Shared section heading */
+  .block {
+    padding-block: clamp(64px, 9vw, 120px) 0;
+  }
+  .block-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 12px 40px;
+    margin-bottom: 40px;
+  }
+  .block-head p {
+    max-width: 40ch;
+    color: var(--muted);
+  }
+  h2 {
+    font-family: 'Unbounded Variable', sans-serif;
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    background: linear-gradient(170deg, var(--text) 35%, #9fcfff);
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Skills as particle tiles */
+  .families {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 36px 28px;
+  }
+  .family {
+    --c: var(--ion);
+  }
+  .quark {
+    --c: var(--quark);
+  }
+  .lepton {
+    --c: var(--lepton);
+  }
+  .photon {
+    --c: var(--photon);
+  }
+  .boson {
+    --c: var(--boson);
+  }
+  .family h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--c);
+  }
+  .family h3::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--c);
+    border-radius: 50%;
+  }
+  .family ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 8px;
+  }
+  [data-tile] {
+    --x: 50%;
+    --y: 50%;
+    position: relative;
+    display: grid;
+    align-content: space-between;
+    min-height: 96px;
+    padding: 10px 12px;
+    border: 1px solid color-mix(in oklab, var(--c) 28%, transparent);
+    border-radius: 10px;
+    background:
+      radial-gradient(
+        120px circle at var(--x) var(--y),
+        color-mix(in oklab, var(--c) 22%, transparent),
+        transparent 70%
+      ),
+      var(--panel);
+    transition:
+      translate 0.25s,
+      border-color 0.25s,
+      box-shadow 0.25s;
+  }
+  [data-tile]:hover {
+    translate: 0 -4px;
+    border-color: var(--c);
+    box-shadow: 0 10px 30px -10px var(--c);
+  }
+  .symbol {
+    font-family: 'Unbounded Variable', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--c);
+  }
+  .tile-name {
+    font-size: 13px;
+    line-height: 1.25;
+  }
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @media (prefers-reduced-motion: no-preference) {
+      [data-tile] {
+        animation: materialize linear both;
+        animation-timeline: view();
+        animation-range: entry calc(var(--i) * 4%) entry
+          calc(60% + var(--i) * 4%);
+      }
+    }
+  }
+  @keyframes materialize {
+    from {
+      opacity: 0;
+      scale: 0.6;
+      filter: blur(8px);
+    }
+  }
+
+  /* Career: a timeline with a beam of light that fills as you scroll. */
+  .timeline {
+    position: relative;
+    view-timeline: --timeline block;
+    padding-left: 44px;
+  }
+  .timeline::before,
+  .timeline::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 11px;
+    width: 2px;
+    border-radius: 2px;
+  }
+  .timeline::before {
+    background: var(--line);
+  }
+  .timeline::after {
+    background: linear-gradient(var(--photon), var(--ion) 40%, var(--quark));
+    box-shadow: 0 0 12px var(--ion);
+    transform-origin: top;
+  }
+  @supports ((animation-timeline: view()) and (animation-range: cover)) {
+    @media (prefers-reduced-motion: no-preference) {
+      .timeline::after {
+        animation: beam linear both;
+        animation-timeline: --timeline;
+        animation-range: cover 10% cover 70%;
+      }
+      .epoch {
+        animation: arrive linear both;
+        animation-timeline: view();
+        animation-range: entry 10% entry 80%;
+      }
+    }
+  }
+  @keyframes beam {
+    from {
+      scale: 1 0;
+    }
+  }
+  @keyframes arrive {
+    from {
+      opacity: 0;
+      translate: 40px 0;
+    }
+  }
+  .epoch {
+    position: relative;
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 6px 32px;
+    padding-block: 26px;
+    border-bottom: 1px solid var(--line);
+  }
+  .node {
+    position: absolute;
+    left: -39px;
+    top: 34px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--void);
+    border: 2px solid var(--ion);
+  }
+  .epoch:first-child .node {
+    background: var(--photon);
+    border-color: var(--photon);
+    box-shadow: 0 0 18px var(--photon);
+    animation: pulse-star 2.6s ease-in-out infinite;
+  }
+  @keyframes pulse-star {
+    50% {
+      box-shadow: 0 0 30px 4px var(--photon);
+    }
+  }
+  .years {
+    font-family: 'Unbounded Variable', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ion);
+    font-variant-numeric: tabular-nums;
+  }
+  .epoch:first-child .years {
+    color: var(--photon);
+  }
+  .epoch h3 {
+    font-family: 'Unbounded Variable', sans-serif;
+    font-size: clamp(19px, 2vw, 24px);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .job-role {
+    color: var(--muted);
+  }
+  .job-summary {
+    margin-top: 8px;
+    max-width: 60ch;
+  }
+
+  .education {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-top: 48px;
+    padding: 28px 32px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background:
+      linear-gradient(120deg, rgb(124 196 255 / 0.08), rgb(181 156 255 / 0.06)),
+      var(--deep);
+  }
+  .education h2 {
+    margin-bottom: 6px;
+    font-size: 22px;
+  }
+  .education strong {
+    font-weight: 600;
+    color: var(--ion);
+  }
+  .mini-atom {
+    position: relative;
+    flex: none;
+    width: 64px;
+    height: 64px;
+  }
+  .mini-atom::before,
+  .mini-atom::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1.5px solid var(--ion);
+    border-radius: 50%;
+    animation: wobble 6s linear infinite;
+  }
+  .mini-atom::after {
+    border-color: var(--photon);
+    animation-direction: reverse;
+  }
+  @keyframes wobble {
+    from {
+      transform: rotate(0deg) scaleY(0.35);
+    }
+    to {
+      transform: rotate(360deg) scaleY(0.35);
+    }
+  }
+
+  /* Contact: two particles linked by an entangled wave. */
+  /* The padding below replaces .block's top padding, so the gap is a margin. */
+  .contact {
+    margin-block: clamp(64px, 9vw, 120px);
+    padding: clamp(40px, 7vw, 88px) clamp(20px, 5vw, 64px);
+    border: 1px solid var(--line);
+    border-radius: 32px;
+    background:
+      radial-gradient(
+        600px 300px at 50% 0%,
+        rgb(124 196 255 / 0.14),
+        transparent 70%
+      ),
+      var(--deep);
+    text-align: center;
+  }
+  .contact-lead {
+    max-width: 46ch;
+    margin: 20px auto 44px;
+    color: var(--muted);
+    font-size: 19px;
+  }
+  .pair {
+    display: grid;
+    grid-template-columns: 1fr 120px 1fr;
+    align-items: center;
+    max-width: 920px;
+    margin-inline: auto;
+  }
+  .particle {
+    display: grid;
+    gap: 4px;
+    padding: 28px 24px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--panel);
+    text-decoration: none;
+    transition:
+      border-color 0.3s,
+      box-shadow 0.3s,
+      translate 0.3s;
+  }
+  .particle.tg {
+    border-color: rgb(124 196 255 / 0.5);
+  }
+  .particle:hover,
+  .particle:focus-visible {
+    border-color: var(--ion);
+    box-shadow: 0 0 40px -6px rgb(124 196 255 / 0.5);
+    translate: 0 -4px;
+  }
+  .via {
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .particle strong {
+    font-size: clamp(18px, 2.2vw, 24px);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+  .tg strong {
+    color: var(--ion);
+  }
+  .note {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .wave {
+    width: 100%;
+    overflow: visible;
+  }
+  .wave path {
+    fill: none;
+    stroke: var(--ion);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 6;
+    animation: flow 1.6s linear infinite;
+  }
+  .wave path + path {
+    stroke: var(--photon);
+    animation-direction: reverse;
+  }
+  .pair:has(.particle:hover) .wave path {
+    animation-duration: 0.5s;
+    stroke-width: 2;
+  }
+  @keyframes flow {
+    to {
+      stroke-dashoffset: -20;
+    }
+  }
+  .avail {
+    margin-top: 36px;
+    color: var(--lepton);
+  }
+
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-block: 0 40px;
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  @media (max-width: 860px) {
+    .hero {
+      --atom: min(380px, 70vw);
+      grid-template-columns: 1fr;
+      padding-top: 96px;
+    }
+    .atom-wrap {
+      order: -1;
+      justify-self: center;
+      padding-inline: 0;
+    }
+    .pair {
+      grid-template-columns: 1fr;
+    }
+    .wave {
+      width: 72px;
+      margin: 4px auto;
+      rotate: 90deg;
+    }
+  }
+  @media (max-width: 600px) {
+    .epoch {
+      grid-template-columns: 1fr;
+    }
+    .timeline {
+      padding-left: 34px;
+    }
+    .node {
+      left: -29px;
+    }
+    .timeline::before,
+    .timeline::after {
+      left: 7px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .letter {
+      animation: none;
+    }
+  }
+</style>

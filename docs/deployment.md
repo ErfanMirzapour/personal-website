@@ -38,7 +38,7 @@ The site generates static HTML, unique titles/descriptions, canonical URLs, Open
 
 Only the selected production build allows indexing. CI verifies unique titles, descriptions, and canonical URLs; matching Open Graph metadata; logical page headings; structured data; sitemap membership; and draft exclusion. Check the final HTML and `robots.txt` again at the live domain. `noindex` is not access control; development samples remain absent from deployed files.
 
-Create a Google Search Console Domain property for erfanmirzapour.ir in the owner’s account. Add its exact TXT verification token to DNS, verify ownership, and submit https://erfanmirzapour.ir/sitemap-index.xml. Use URL Inspection for home, writing and the first real article. Search Console needs the owner’s account access; it is not configured by source code alone.
+Create a Google Search Console Domain property for erfanmirzapour.ir in the owner’s account. Add its exact TXT verification token to DNS, verify ownership, and submit https://erfanmirzapour.ir/sitemap-index.xml. Use URL Inspection for the homepage. Search Console needs the owner’s account access; it is not configured by source code alone.
 
 ## Rollback
 
