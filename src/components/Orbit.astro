@@ -2,66 +2,33 @@
 import '@fontsource-variable/unbounded';
 import '@fontsource-variable/onest';
 import { Picture } from 'astro:assets';
-import portrait from '../assets/images/erfan-portrait.jpg';
 import SocialIcons from './SocialIcons.astro';
-import { site, skills, experience, education, year } from '../data/site';
+import { profile, contact, skills, career, isoMonth } from '../data/site';
 
-// Three tilted electron shells, like the classic atom symbol.
-const shells = [
-  { tilt: 0, dur: 28, items: ['TypeScript', 'React', 'Svelte', 'Astro'] },
-  {
-    tilt: 60,
-    dur: 36,
-    items: ['Accessibility', 'Vue', 'Performance', 'Angular'],
-  },
-  {
-    tilt: -60,
-    dur: 44,
-    items: ['Node.js', 'Next.js', 'Playwright', 'PostgreSQL'],
-  },
-];
+// The orbiting skills are split across three tilted electron shells,
+// like the classic atom symbol.
+const tilts = [0, 60, -60];
+const perShell = Math.ceil(skills.orbit.length / tilts.length);
+const shells = tilts.map((tilt, i) => ({
+  tilt,
+  dur: 28 + i * 8,
+  items: skills.orbit.slice(i * perShell, (i + 1) * perShell),
+}));
 
-// Skill groups read like particle families in the Standard Model chart.
-const families = ['ion', 'quark', 'lepton', 'photon', 'boson'];
-const symbols: Record<string, string> = {
-  JavaScript: 'Js',
-  TypeScript: 'Ts',
-  Accessibility: 'A11y',
-  'Responsive design': 'Rd',
-  Performance: 'Pf',
-  React: 'Re',
-  Svelte: 'Sv',
-  Angular: 'Ng',
-  Vue: 'Vu',
-  Solid: 'So',
-  HTMX: 'Hx',
-  Astro: 'As',
-  'Next.js': 'Nx',
-  Nuxt: 'Nu',
-  Remix: 'Rx',
-  Vite: 'Vi',
-  'Tailwind CSS': 'Tw',
-  'shadcn/ui': 'Sh',
-  'Node.js': 'Nd',
-  Bun: 'Bn',
-  Deno: 'De',
-  PostgreSQL: 'Pg',
-  SQLite: 'Sq',
-  MongoDB: 'Mg',
-  Prisma: 'Pr',
-  Drizzle: 'Dz',
-  Vitest: 'Vt',
-  Jest: 'Je',
-  'Testing Library': 'Tl',
-  Playwright: 'Pw',
-  Cypress: 'Cy',
-  Storybook: 'Sb',
-};
+// Each skill group gets its own colour. Hues are spread evenly around the
+// colour wheel (starting at the site's blue), so any number of groups works.
+const groupHue = (g: number) => Math.round(240 + (g * 360) / skills.groups.length) % 360;
 
-const nameWords = site.name.split(' ');
-const summaryWords = site.summary.map((p) => p.split(' '));
+const initials = profile.name
+  .split(/\s+/)
+  .map((part) => part[0])
+  .join('')
+  .slice(0, 3);
+const nameWords = profile.name.split(' ');
+const summaryWords = profile.summary.map((p) => p.split(' '));
 const totalWords = summaryWords.flat().length;
 let wordIndex = 0;
+const portrait = profile.portrait;
 ---
 
 <div class="page">
@@ -69,8 +36,8 @@ let wordIndex = 0;
   <div class="progress" aria-hidden="true"></div>
 
   <header class="top" data-header>
-    <a class="mark" href="#main" aria-label="Erfan Mirzapour, back to top">
-      EM
+    <a class="mark" href="#main" aria-label={`${profile.name}, back to top`}>
+      {initials}
     </a>
     <nav aria-label="Main navigation">
       <a href="#skills">Skills</a>
@@ -84,10 +51,10 @@ let wordIndex = 0;
       <div class="hero-text">
         <p class="role">
           <span class="pulse" aria-hidden="true"></span>
-          {site.title}, {site.location}
+          {profile.title}, {profile.location}
         </p>
         <h1 id="hero-title">
-          <span class="sr-only">{site.name}</span>
+          <span class="sr-only">{profile.name}</span>
           <span class="name" aria-hidden="true">
             {nameWords.map((word, w) => (
               <span class="word">
@@ -100,13 +67,13 @@ let wordIndex = 0;
             ))}
           </span>
         </h1>
-        <p class="intro">{site.intro}</p>
+        <p class="intro">{profile.intro}</p>
         <div class="cta">
-          <a class="btn primary" href={site.telegram}>
-            Message me on Telegram
+          <a class="btn primary" href={contact.telegramUrl}>
+            {contact.primaryCta}
           </a>
-          <a class="btn" href={`mailto:${site.email}`}>
-            Send an email
+          <a class="btn" href={`mailto:${contact.email}`}>
+            {contact.secondaryCta}
           </a>
         </div>
       </div>
@@ -137,7 +104,7 @@ let wordIndex = 0;
               formats={['avif', 'webp']}
               widths={[240, 400, 640]}
               sizes="(max-width: 860px) 34vw, 220px"
-              alt="Erfan Mirzapour at his desk, chin resting on his hand"
+              alt=''
               loading="eager"
               fetchpriority="high"
             />
@@ -158,23 +125,20 @@ let wordIndex = 0;
 
     <section id="skills" class="block skills" aria-labelledby="skills-title">
       <div class="block-head">
-        <h2 id="skills-title">Skills</h2>
-        <p>
-          My toolkit, grouped like particle families. These are the pieces
-          everything I build is made from.
-        </p>
+        <h2 id="skills-title">{skills.heading}</h2>
+        <p>{skills.lead}</p>
       </div>
       <div class="families" data-spotlight>
-        {skills.map((group, g) => (
-          <div class={`family ${families[g]}`}>
+        {skills.groups.map((group, g) => (
+          <div class="family" style={`--hue:${groupHue(g)}`}>
             <h3>{group.name}</h3>
             <ul>
               {group.items.map((item, i) => (
                 <li data-tile style={`--i:${i}`}>
                   <span class="symbol" aria-hidden="true">
-                    {symbols[item] ?? item.slice(0, 2)}
+                    {item.symbol}
                   </span>
-                  <span class="tile-name">{item}</span>
+                  <span class="tile-name">{item.name}</span>
                 </li>
               ))}
             </ul>
@@ -185,21 +149,24 @@ let wordIndex = 0;
 
     <section id="career" class="block career" aria-labelledby="career-title">
       <div class="block-head">
-        <h2 id="career-title">Career</h2>
-        <p>Seven years, from the first freelance job to now.</p>
+        <h2 id="career-title">{career.heading}</h2>
+        <p>{career.lead}</p>
       </div>
       <ol class="timeline">
-        {experience.map((job) => (
+        {career.jobs.map((job) => (
           <li class="epoch">
             <span class="node" aria-hidden="true" />
             <p class="years">
-              {year(job.start)}
-              {year(job.start) !== year(job.end) && <>–{year(job.end)}</>}
+              <time datetime={isoMonth(job.start)}>{job.start}</time>
+              <span class="sr-only"> to </span>
+              <time datetime={isoMonth(job.end)}>{job.end}</time>
             </p>
             <div class="epoch-body">
               <h3>{job.company}</h3>
               <p class="job-role">{job.role}</p>
-              <p class="job-summary">{job.summary}</p>
+              <ul class="job-points">
+                {job.points.map((point) => <li>{point}</li>)}
+              </ul>
             </div>
           </li>
         ))}
@@ -207,39 +174,33 @@ let wordIndex = 0;
       <div class="education">
         <span class="mini-atom" aria-hidden="true"></span>
         <div>
-          <h2>Education</h2>
+          <h2>{career.education.heading}</h2>
           <p>
-            {education.degree}
+            {career.education.degree}
             <br />
-            <strong>{education.school}</strong>
+            <strong>{career.education.school}</strong>
           </p>
         </div>
       </div>
     </section>
 
     <section id="contact" class="block contact" aria-labelledby="contact-title">
-      <h2 id="contact-title">Say hello</h2>
-      <p class="contact-lead">
-        Telegram is where I reply fastest, usually the same day. Email works
-        well for anything longer.
-      </p>
+      <h2 id="contact-title">{contact.heading}</h2>
+      <p class="contact-lead">{contact.lead}</p>
       <div class="pair">
-        <a class="particle tg" href={site.telegram}>
+        <a class="particle tg" href={contact.telegramUrl}>
           <span class="via">Telegram</span>
-          <strong>{site.telegramHandle}</strong>
-          <span class="note">Fastest reply</span>
+          <strong>{contact.telegramHandle}</strong>
         </a>
         <svg class="wave" viewBox="0 0 120 40" aria-hidden="true">
           <path d="M0 20 Q 15 0 30 20 T 60 20 T 90 20 T 120 20" />
           <path d="M0 20 Q 15 40 30 20 T 60 20 T 90 20 T 120 20" />
         </svg>
-        <a class="particle" href={`mailto:${site.email}`}>
+        <a class="particle" href={`mailto:${contact.email}`}>
           <span class="via">Email</span>
-          <strong>{site.email}</strong>
-          <span class="note">For longer messages</span>
+          <strong>{contact.email}</strong>
         </a>
       </div>
-      <p class="avail">{site.availability}.</p>
     </section>
   </main>
 
@@ -248,7 +209,7 @@ let wordIndex = 0;
       <SocialIcons />
     </nav>
     <p>
-      © {new Date().getFullYear()} {site.name}
+      © {new Date().getFullYear()} {profile.name}
     </p>
   </footer>
 </div>
@@ -664,6 +625,10 @@ let wordIndex = 0;
     position: absolute;
     top: 50%;
     left: 50%;
+    /* Zero size so every rotation pivots on the shell's centre. With the
+       label's size here, longer labels orbited an off-centre point. */
+    width: 0;
+    height: 0;
     transform-style: preserve-3d;
     /* Move round the shell, then undo every rotation so the label faces us. */
     transform: rotateZ(calc(var(--t) + var(--phase))) translateX(var(--r))
@@ -672,6 +637,7 @@ let wordIndex = 0;
   }
   .tag {
     display: flex;
+    width: max-content;
     align-items: center;
     gap: 7px;
     translate: -50% -50%;
@@ -796,19 +762,7 @@ let wordIndex = 0;
     gap: 36px 28px;
   }
   .family {
-    --c: var(--ion);
-  }
-  .quark {
-    --c: var(--quark);
-  }
-  .lepton {
-    --c: var(--lepton);
-  }
-  .photon {
-    --c: var(--photon);
-  }
-  .boson {
-    --c: var(--boson);
+    --c: oklch(0.83 0.12 var(--hue, 240));
   }
   .family h3 {
     display: flex;
@@ -954,6 +908,10 @@ let wordIndex = 0;
     background: var(--void);
     border: 2px solid var(--ion);
   }
+  .epoch:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
   .epoch:first-child .node {
     background: var(--photon);
     border-color: var(--photon);
@@ -966,11 +924,22 @@ let wordIndex = 0;
     }
   }
   .years {
+    display: grid;
+    gap: 2px;
+    align-content: start;
     font-family: 'Unbounded Variable', sans-serif;
-    font-size: 18px;
+    font-size: 16px;
+    line-height: 1.3;
     font-weight: 500;
     color: var(--ion);
     font-variant-numeric: tabular-nums;
+  }
+  .years time:last-child {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .years time:last-child::before {
+    content: '→ ';
   }
   .epoch:first-child .years {
     color: var(--photon);
@@ -984,16 +953,34 @@ let wordIndex = 0;
   .job-role {
     color: var(--muted);
   }
-  .job-summary {
-    margin-top: 8px;
-    max-width: 60ch;
+  .job-points {
+    display: grid;
+    gap: 6px;
+    margin-top: 10px;
+    max-width: 64ch;
+  }
+  .job-points li {
+    position: relative;
+    padding-left: 18px;
+  }
+  .job-points li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 0.65em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ion);
+    opacity: 0.7;
   }
 
   .education {
     display: flex;
     align-items: center;
     gap: 28px;
-    margin-top: 48px;
+    /* Same as the gap below it, above the contact section */
+    margin-top: clamp(64px, 9vw, 120px);
     padding: 28px 32px;
     border: 1px solid var(--line);
     border-radius: 20px;
