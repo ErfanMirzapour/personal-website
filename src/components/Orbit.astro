@@ -3,7 +3,7 @@ import '@fontsource-variable/unbounded';
 import '@fontsource-variable/onest';
 import { Picture } from 'astro:assets';
 import SocialIcons from './SocialIcons.astro';
-import { profile, contact, skills, career, isoMonth } from '../data/site';
+import { profile, contact, skills, career, isoMonth, version } from '../data/site';
 
 // The orbiting skills are split across three tilted electron shells,
 // like the classic atom symbol.
@@ -220,6 +220,10 @@ const portrait = profile.portrait;
     </nav>
     <p>
       © {new Date().getFullYear()} {profile.name}
+      <span class="dot" aria-hidden="true">·</span>
+      <a class="version" href={version.url} aria-label={`Version ${version.number} release notes`}>
+        v{version.number}
+      </a>
     </p>
   </footer>
 </div>
@@ -1158,6 +1162,25 @@ const portrait = profile.portrait;
     padding-block: 0 40px;
     color: var(--muted);
     font-size: 15px;
+  }
+
+  .foot .dot {
+    margin-inline: 8px;
+    opacity: 0.6;
+  }
+  .version {
+    color: inherit;
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .version:hover {
+    color: var(--ion);
+  }
+  .version:focus-visible {
+    outline: 2px solid var(--photon);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
 
   @media (max-width: 860px) {
