@@ -12,6 +12,8 @@ type Star = {
 type Pair = { x: number; y: number; a: number; age: number; life: number };
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+// Phones and tablets have no hovering pointer to follow.
+const mouse = matchMedia('(hover: hover) and (pointer: fine)');
 
 export function startCosmos(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext('2d');
@@ -108,6 +110,14 @@ export function startCosmos(canvas: HTMLCanvasElement) {
   const tick = (time: number) => {
     const dt = Math.min(time - last, 64);
     last = time;
+    if (!mouse.matches) {
+      // On touch screens the scene drifts on its own, and tilts as you scroll.
+      const tilt = Math.max(-1, Math.min(1, scrollY / innerHeight - 0.5));
+      pointer = {
+        x: Math.sin(time / 3200) * 0.6,
+        y: Math.cos(time / 4100) * 0.35 + tilt * 0.4,
+      };
+    }
     eased.x += (pointer.x - eased.x) * 0.06;
     eased.y += (pointer.y - eased.y) * 0.06;
     root.style.setProperty('--px', eased.x.toFixed(3));
