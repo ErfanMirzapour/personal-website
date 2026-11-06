@@ -1,6 +1,6 @@
 # Erfan Mirzapour — personal website
 
-Astro + TypeScript portfolio and writing site for **erfanmirzapour.ir**. Content is kept in Git; no CMS, database, or contact form is required.
+Astro + TypeScript personal site for **erfanmirzapour.ir**: photo, short summary, skills, career, education, and how to get in touch. Content is kept in Git; no CMS, database, or contact form is required.
 
 ## Run locally
 
@@ -11,28 +11,23 @@ bun install --frozen-lockfile
 bun run dev
 ```
 
-Open **http://127.0.0.1:4321/designs/** to compare five working designs. Each has a homepage, writing index, and clearly marked sample article. These routes exist only during development.
+Open **http://127.0.0.1:4321/**.
 
-The selected production design is the dark developer notebook. The comparison routes are development-only and production builds exclude them. The provider deployment is available at **https://erfanmirzapour.pages.dev** while the custom domain is being activated.
+## Design
+
+The site is a single page built in `src/components/Orbit.astro`: a dark blue-grey space theme inspired by cosmology and quantum physics.
+
+- A canvas starfield (`src/scripts/cosmos.ts`) with depth-based scroll and pointer parallax, plus small particle pairs that appear and annihilate.
+- The portrait as the nucleus of a 3D atom, with skills orbiting on three tilted shells (CSS 3D transforms and an animated `@property` angle).
+- Scroll-driven animations for the hero parallax, the summary lighting up word by word, skill tiles, the career timeline beam and the progress bar. They are progressive enhancement: browsers without scroll-driven animations, such as Firefox, show the finished state.
+- Everything respects `prefers-reduced-motion`.
 
 ## Content
 
-- `src/data/site.ts`: profile, email/social links, skills, experience, and hobbies.
-- `src/content/blog/`: trusted Markdown or MDX articles. The filename determines the stable URL (`my-post.md` → `/blog/my-post/`).
-- `src/data/publication.json`: comparison directions and the final selection.
-
-Example article frontmatter:
-
-```yaml
----
-title: Your article title
-description: A specific summary for readers and search engines.
-pubDate: 2026-09-14
-draft: true
----
-```
-
-Add the body below the frontmatter. Use `updatedDate` only for a real revision. Drafts default to true, and future-dated posts are excluded. Scheduled posts need a new build after the publication date; there is no background scheduler. Set `draft: false` only after the writing is ready. Do not commit confidential drafts to this **public repository**: draft filtering hides them from the website, not GitHub history. MDX is trusted executable repository content.
+- `src/data/site.ts`: summary, email/Telegram/social links, skills, career, and education.
+- `src/components/SocialIcons.astro`: footer icons (from `simple-icons`, with LinkedIn and email drawn by hand).
+- `src/assets/images/erfan-portrait.jpg`: the portrait. Astro generates the responsive AVIF/WebP versions.
+- Fonts are self-hosted through `@fontsource` packages, so they work with the site's Content Security Policy.
 
 ## Checks
 
@@ -44,7 +39,7 @@ bunx playwright install chromium firefox webkit
 bun run test
 ```
 
-Browser tests cover the production design in Chromium, Firefox, and WebKit on desktop and mobile. They verify keyboard navigation, writing routes, overflow, and axe accessibility checks. Build tests check metadata, schema, sitemap, and unpublished-content exclusion. GitHub Actions runs these checks on PRs and `main`.
+Browser tests cover the production design in Chromium, Firefox, and WebKit on desktop and mobile. They verify content, the skip link, horizontal overflow, and axe accessibility checks. Build tests check metadata, schema, sitemap, and that the removed blog stays out of production. GitHub Actions runs these checks on PRs and `main`.
 
 ## Workflow
 

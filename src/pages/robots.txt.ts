@@ -1,7 +1,5 @@
-import { selectedDesign } from '../data/designs';
 export function GET() {
-  const production =
-    selectedDesign && import.meta.env.PUBLIC_SITE_ENV === 'production';
+  const production = import.meta.env.PUBLIC_SITE_ENV === 'production';
   return new Response(
     production
       ? 'User-agent: *\nAllow: /\nSitemap: https://erfanmirzapour.ir/sitemap-index.xml\n'
