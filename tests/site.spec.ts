@@ -53,23 +53,40 @@ test('reduced motion still shows the full name and content', async ({
   await expect(page.locator('.about span').first()).toBeVisible();
 });
 
-test('the hero name is not cut off when text is enlarged', async ({ page }) => {
+test('the hero name fits whole when text is enlarged', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 700 });
+  // No intro animation, so the letters are measured where they rest.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
-  // Double the heading size, like 200% text zoom. The page clips horizontal
-  // overflow, so check each letter is inside the viewport.
-  const clipped = await page.evaluate(() => {
+  // Triple the heading size, like very large system text, then let the page
+  // react the way it does to a resize.
+  const result = await page.evaluate(async () => {
     const title = document.querySelector<HTMLElement>('#hero-title')!;
-    const size = parseFloat(getComputedStyle(title).fontSize) * 2;
     const sheet = new CSSStyleSheet();
-    sheet.replaceSync(`#hero-title { font-size: ${size}px !important; }`);
+    sheet.replaceSync(
+      '#hero-title { font-size: calc(clamp(42px, 7vw, 96px) * 3 * var(--fit, 1)) !important; }',
+    );
     document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
-    return [...title.querySelectorAll('.letter')]
-      .filter((letter) => letter.getBoundingClientRect().right > window.innerWidth)
-      .map((letter) => letter.textContent?.trim())
-      .join('');
+    window.dispatchEvent(new Event('resize'));
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+    const words = [...title.querySelectorAll<HTMLElement>('.word')];
+    return {
+      outside: words
+        .filter((word) => word.getBoundingClientRect().right > window.innerWidth)
+        .map((word) => word.textContent?.trim()),
+      lines: words.map(
+        (word) =>
+          new Set(
+            [...word.querySelectorAll('.letter')].map((letter) =>
+              Math.round(letter.getBoundingClientRect().top),
+            ),
+          ).size,
+      ),
+    };
   });
-  expect(clipped).toBe('');
+  // Every word fits on screen and stays on a single line.
+  expect(result.outside).toEqual([]);
+  expect(result.lines).toEqual([1, 1]);
 });
 
 test('missing pages show the 404 page', async ({ page }) => {

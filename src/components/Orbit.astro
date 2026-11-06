@@ -229,13 +229,15 @@ const portrait = profile.portrait;
 </div>
 
 <script>
-  import { startCosmos, trackHeader, trackSpotlight } from '../scripts/cosmos';
+  import { startCosmos, trackHeader, trackSpotlight, fitName } from '../scripts/cosmos';
   const canvas = document.querySelector<HTMLCanvasElement>('[data-cosmos]');
   const header = document.querySelector<HTMLElement>('[data-header]');
   const spotlight = document.querySelector<HTMLElement>('[data-spotlight]');
   if (canvas) startCosmos(canvas);
   if (header) trackHeader(header);
   if (spotlight) trackSpotlight(spotlight);
+  const title = document.querySelector<HTMLElement>('#hero-title');
+  if (title) fitName(title);
 </script>
 
 <style is:global>
@@ -451,17 +453,20 @@ const portrait = profile.portrait;
   h1 {
     margin-block: 22px 20px;
     font-family: 'Unbounded Variable', sans-serif;
-    font-size: clamp(42px, 7vw, 96px);
+    /* --fit is set by fitName() in cosmos.ts when large text would make a
+       word wider than the screen. It shrinks the name instead of splitting it. */
+    font-size: calc(clamp(42px, 7vw, 96px) * var(--fit, 1));
     font-weight: 700;
     line-height: 0.98;
     letter-spacing: -0.035em;
   }
-  /* Words stay whole when they fit. When text is enlarged (for example 200%
-     zoom on a phone), letters may wrap instead of being cut off. */
   .word {
     display: inline-block;
-    max-width: 100%;
+    white-space: nowrap;
     margin-right: 0.22em;
+  }
+  .hero-text {
+    min-width: 0;
   }
   /* Each letter starts smeared across two states, then collapses into place. */
   .letter {
