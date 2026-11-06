@@ -180,3 +180,25 @@ export function trackSpotlight(container: HTMLElement) {
     tile.style.setProperty('--y', `${event.clientY - box.top}px`);
   });
 }
+
+// Shrinks the hero name when a word would be wider than the screen, for
+// example with enlarged text on a phone. Words never split across lines.
+export function fitName(title: HTMLElement) {
+  // Switches the CSS from "wrap if needed" to "keep words whole".
+  title.setAttribute('data-fit', '');
+  const fit = () => {
+    title.style.removeProperty('--fit');
+    const room = title.clientWidth;
+    const widest = Math.max(
+      ...[...title.querySelectorAll<HTMLElement>('.word')].map(
+        (word) => word.getBoundingClientRect().width,
+      ),
+    );
+    if (room > 0 && widest > room) {
+      title.style.setProperty('--fit', String(Math.floor((room / widest) * 100) / 100));
+    }
+  };
+  fit();
+  document.fonts?.ready.then(fit);
+  addEventListener('resize', fit);
+}
