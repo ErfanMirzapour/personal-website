@@ -1,19 +1,24 @@
 ---
 import Base from '../layouts/Base.astro';
 import Orbit from '../components/Orbit.astro';
-import { site, education } from '../data/site';
+import { site, profile, contact, career } from '../data/site';
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: site.name,
   url: site.url,
   jobTitle: site.title,
-  email: `mailto:${site.email}`,
-  alumniOf: education.school,
-  sameAs: [site.linkedin, site.github, site.telegram, site.instagram],
+  email: `mailto:${contact.email}`,
+  alumniOf: career.education.school,
+  sameAs: [
+    contact.linkedin,
+    contact.github,
+    contact.telegramUrl,
+    contact.instagram,
+  ],
 };
 ---
 
-<Base title="Erfan Mirzapour — Senior Frontend Engineer" schema={schema}>
+<Base title={profile.seoTitle} schema={schema}>
   <Orbit />
 </Base>

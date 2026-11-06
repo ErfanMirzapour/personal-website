@@ -1,13 +1,13 @@
 ---
 import { siGithub, siInstagram, siTelegram } from 'simple-icons';
-import { site } from '../data/site';
+import { contact } from '../data/site';
 // simple-icons no longer ships LinkedIn, so it and the envelope are drawn here.
 const links = [
-  { name: 'LinkedIn', href: site.linkedin, icon: 'linkedin' },
-  { name: 'GitHub', href: site.github, path: siGithub.path },
-  { name: 'Telegram', href: site.telegram, path: siTelegram.path },
-  { name: 'Instagram', href: site.instagram, path: siInstagram.path },
-  { name: 'Email', href: `mailto:${site.email}`, icon: 'mail' },
+  { name: 'LinkedIn', href: contact.linkedin, icon: 'linkedin' },
+  { name: 'GitHub', href: contact.github, path: siGithub.path },
+  { name: 'Telegram', href: contact.telegramUrl, path: siTelegram.path },
+  { name: 'Instagram', href: contact.instagram, path: siInstagram.path },
+  { name: 'Email', href: `mailto:${contact.email}`, icon: 'mail' },
 ];
 ---
 

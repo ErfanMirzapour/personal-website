@@ -24,9 +24,11 @@ The site is a single page built in `src/components/Orbit.astro`: a dark blue-gre
 
 ## Content
 
-- `src/data/site.ts`: summary, email/Telegram/social links, skills, career, and education.
-- `src/components/SocialIcons.astro`: footer icons (from `simple-icons`, with LinkedIn and email drawn by hand).
-- `src/assets/images/erfan-portrait.jpg`: the portrait. Astro generates the responsive AVIF/WebP versions.
+Everything you see on the page is in one file: **`src/content.ts`**. It has your profile and summary, contact details and social links, the orbiting skills and skill families, and your jobs and education. Edit a value, save, and the dev server updates the page.
+
+- Run `bun run check` after editing. It catches mistakes such as a missing field or a date not written like `Jul 2025`.
+- To change the photo, put the new image in `src/assets/images/` and update the import at the top of `src/content.ts`. Astro generates the responsive AVIF/WebP versions.
+- Footer icons are in `src/components/SocialIcons.astro` (from `simple-icons`, with LinkedIn and email drawn by hand).
 - Fonts are self-hosted through `@fontsource` packages, so they work with the site's Content Security Policy.
 
 ## Checks
