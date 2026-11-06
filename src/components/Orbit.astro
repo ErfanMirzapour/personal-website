@@ -3,17 +3,26 @@ import '@fontsource-variable/unbounded';
 import '@fontsource-variable/onest';
 import { Picture } from 'astro:assets';
 import SocialIcons from './SocialIcons.astro';
-import { profile, contact, skills, career, isoMonth } from '../data/site';
+import { profile, contact, skills, career, isoMonth, version } from '../data/site';
 
 // The orbiting skills are split across three tilted electron shells,
 // like the classic atom symbol.
+// Phones get their own, shorter list.
 const tilts = [0, 60, -60];
-const perShell = Math.ceil(skills.orbit.length / tilts.length);
-const shells = tilts.map((tilt, i) => ({
-  tilt,
-  dur: 28 + i * 8,
-  items: skills.orbit.slice(i * perShell, (i + 1) * perShell),
-}));
+const toShells = (list: string[], screen: 'desktop' | 'mobile') => {
+  const perShell = Math.ceil(list.length / tilts.length);
+  return tilts.map((tilt, i) => ({
+    tilt,
+    ring: i,
+    screen,
+    dur: 28 + i * 8,
+    items: list.slice(i * perShell, (i + 1) * perShell),
+  }));
+};
+const shells = [
+  ...toShells(skills.orbit.desktop, 'desktop'),
+  ...toShells(skills.orbit.mobile, 'mobile'),
+];
 
 // Each skill group gets its own colour. Hues are spread evenly around the
 // colour wheel (starting at the site's blue), so any number of groups works.
@@ -83,7 +92,8 @@ const portrait = profile.portrait;
           <div class="cloud" aria-hidden="true"></div>
           {shells.map((shell) => (
             <div
-              class="shell"
+              class={`shell ${shell.screen}`}
+              data-ring={shell.ring}
               aria-hidden="true"
               style={`--tilt:${shell.tilt}deg;--dur:${shell.dur}s`}
             >
@@ -210,6 +220,10 @@ const portrait = profile.portrait;
     </nav>
     <p>
       © {new Date().getFullYear()} {profile.name}
+      <span class="dot" aria-hidden="true">·</span>
+      <a class="version" href={version.url} aria-label={`Version ${version.number} release notes`}>
+        v{version.number}
+      </a>
     </p>
   </footer>
 </div>
@@ -442,9 +456,11 @@ const portrait = profile.portrait;
     line-height: 0.98;
     letter-spacing: -0.035em;
   }
+  /* Words stay whole when they fit. When text is enlarged (for example 200%
+     zoom on a phone), letters may wrap instead of being cut off. */
   .word {
     display: inline-block;
-    white-space: nowrap;
+    max-width: 100%;
     margin-right: 0.22em;
   }
   /* Each letter starts smeared across two states, then collapses into place. */
@@ -609,6 +625,9 @@ const portrait = profile.portrait;
     transform: rotateZ(var(--tilt)) rotateX(var(--tilt-x));
     animation: orbit var(--dur) linear infinite;
   }
+  .shell.mobile {
+    display: none;
+  }
   @keyframes orbit {
     to {
       --t: 360deg;
@@ -656,11 +675,11 @@ const portrait = profile.portrait;
     background: var(--ion);
     box-shadow: 0 0 10px var(--ion);
   }
-  .shell:nth-of-type(2) .tag::before {
+  .shell[data-ring='1'] .tag::before {
     background: var(--quark);
     box-shadow: 0 0 10px var(--quark);
   }
-  .shell:nth-of-type(3) .tag::before {
+  .shell[data-ring='2'] .tag::before {
     background: var(--photon);
     box-shadow: 0 0 10px var(--photon);
   }
@@ -842,10 +861,13 @@ const portrait = profile.portrait;
   }
 
   /* Career: a timeline with a beam of light that fills as you scroll. */
+  /* --rail is where the line's centre sits; the dots are centred on it. */
   .timeline {
+    --rail: 12px;
+    --indent: 44px;
     position: relative;
     view-timeline: --timeline block;
-    padding-left: 44px;
+    padding-left: var(--indent);
   }
   .timeline::before,
   .timeline::after {
@@ -853,7 +875,7 @@ const portrait = profile.portrait;
     position: absolute;
     top: 8px;
     bottom: 8px;
-    left: 11px;
+    left: calc(var(--rail) - 1px);
     width: 2px;
     border-radius: 2px;
   }
@@ -872,8 +894,14 @@ const portrait = profile.portrait;
         animation-timeline: --timeline;
         animation-range: cover 10% cover 70%;
       }
-      .epoch {
+      /* Only the text slides in, so the dot stays on the line. */
+      .epoch > :not(.node) {
         animation: arrive linear both;
+        animation-timeline: view();
+        animation-range: entry 10% entry 80%;
+      }
+      .node {
+        animation: fade-in linear both;
         animation-timeline: view();
         animation-range: entry 10% entry 80%;
       }
@@ -882,6 +910,11 @@ const portrait = profile.portrait;
   @keyframes beam {
     from {
       scale: 1 0;
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
     }
   }
   @keyframes arrive {
@@ -900,7 +933,7 @@ const portrait = profile.portrait;
   }
   .node {
     position: absolute;
-    left: -39px;
+    left: calc(var(--rail) - var(--indent) - 6px);
     top: 34px;
     width: 12px;
     height: 12px;
@@ -1131,7 +1164,49 @@ const portrait = profile.portrait;
     font-size: 15px;
   }
 
+  .foot .dot {
+    margin-inline: 8px;
+    opacity: 0.6;
+  }
+  .version {
+    color: inherit;
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .version:hover {
+    color: var(--ion);
+  }
+  .version:focus-visible {
+    outline: 2px solid var(--photon);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
   @media (max-width: 860px) {
+    /* On phones the atom sits above the text, so lifting the text would push
+       it into the atom. Only the atom drifts, from when it starts leaving. */
+    .hero-text {
+      animation: none;
+    }
+    .atom-wrap {
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+    .foot {
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+    .foot :global(.icons) {
+      justify-content: center;
+    }
+    .shell.desktop {
+      display: none;
+    }
+    .shell.mobile {
+      display: block;
+    }
     .hero {
       --atom: min(380px, 70vw);
       grid-template-columns: 1fr;
@@ -1156,14 +1231,8 @@ const portrait = profile.portrait;
       grid-template-columns: 1fr;
     }
     .timeline {
-      padding-left: 34px;
-    }
-    .node {
-      left: -29px;
-    }
-    .timeline::before,
-    .timeline::after {
-      left: 7px;
+      --rail: 8px;
+      --indent: 34px;
     }
   }
   @media (prefers-reduced-motion: reduce) {

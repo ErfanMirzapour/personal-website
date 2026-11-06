@@ -43,26 +43,42 @@ export const contact = {
 export const skills = {
   heading: 'Skills',
   lead: 'These are the pieces everything I build is made from.',
-  // Skills orbiting your photo, split evenly across three orbits. Around 12 looks best.
-  orbit: [
-    'TypeScript',
-    'React',
-    'Vue',
-    'Astro',
-    'Node.js',
-    'Bun',
-    'Golang',
-    'Python',
-    'Docker',
-    'Technical Leadership',
-    'System Design',
-    'Auth',
-    'Databases',
-    'CI/CD',
-    'Mentoring',
-  ],
-  // Up to five families, each with its own colour. `symbol` is the short
-  // code shown on the tile (up to 4 characters).
+  // Skills orbiting your photo, split evenly across three orbits.
+  // `desktop` is for wide screens (around 12-15 looks best). `mobile` is for
+  // phones, where the atom is smaller: keep it short, around 8.
+  orbit: {
+    desktop: [
+      'TypeScript',
+      'React',
+      'Vue',
+      'Astro',
+      'Node.js',
+      'Bun',
+      'Golang',
+      'Python',
+      'Docker',
+      'Technical Leadership',
+      'System Design',
+      'Auth',
+      'Databases',
+      'CI/CD',
+      'Mentoring',
+    ],
+    mobile: [
+      'TypeScript',
+      'React',
+      'Vue',
+      'Astro',
+      'Node.js',
+      'Golang',
+      'Python',
+      'Technical Leadership',
+      'Databases',
+      'CI/CD',
+    ],
+  },
+  // Skill groups. Each one gets its own colour automatically. `symbol` is the
+  // short code shown on the tile (up to 4 characters).
   groups: [
     {
       name: 'The Web Platform',

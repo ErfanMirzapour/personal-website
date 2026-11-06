@@ -53,6 +53,25 @@ test('reduced motion still shows the full name and content', async ({
   await expect(page.locator('.about span').first()).toBeVisible();
 });
 
+test('the hero name is not cut off when text is enlarged', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 700 });
+  await page.goto('/');
+  // Double the heading size, like 200% text zoom. The page clips horizontal
+  // overflow, so check each letter is inside the viewport.
+  const clipped = await page.evaluate(() => {
+    const title = document.querySelector<HTMLElement>('#hero-title')!;
+    const size = parseFloat(getComputedStyle(title).fontSize) * 2;
+    const sheet = new CSSStyleSheet();
+    sheet.replaceSync(`#hero-title { font-size: ${size}px !important; }`);
+    document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
+    return [...title.querySelectorAll('.letter')]
+      .filter((letter) => letter.getBoundingClientRect().right > window.innerWidth)
+      .map((letter) => letter.textContent?.trim())
+      .join('');
+  });
+  expect(clipped).toBe('');
+});
+
 test('missing pages show the 404 page', async ({ page }) => {
   await page.goto('/blog/');
   await expect(
