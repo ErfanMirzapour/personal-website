@@ -184,6 +184,8 @@ export function trackSpotlight(container: HTMLElement) {
 // Shrinks the hero name when a word would be wider than the screen, for
 // example with enlarged text on a phone. Words never split across lines.
 export function fitName(title: HTMLElement) {
+  // Switches the CSS from "wrap if needed" to "keep words whole".
+  title.setAttribute('data-fit', '');
   const fit = () => {
     title.style.removeProperty('--fit');
     const room = title.clientWidth;

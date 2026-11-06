@@ -460,10 +460,16 @@ const portrait = profile.portrait;
     line-height: 0.98;
     letter-spacing: -0.035em;
   }
+  /* Without JavaScript, a word that is too wide may wrap rather than be cut
+     off. Once fitName() has run, it keeps words whole and shrinks the name. */
   .word {
     display: inline-block;
-    white-space: nowrap;
+    max-width: 100%;
     margin-right: 0.22em;
+  }
+  h1[data-fit] .word {
+    max-width: none;
+    white-space: nowrap;
   }
   .hero-text {
     min-width: 0;
